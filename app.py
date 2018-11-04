@@ -11,6 +11,8 @@ def div_test():
     temp='<h1>Hello World</h1>'
     return render_template('asd.html',temp=temp)
 
+Hello OSama
+
 
 @app.route('/Osama',methods=['GET', 'POST'])
 def hello_Osama():
