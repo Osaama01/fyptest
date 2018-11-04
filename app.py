@@ -4,17 +4,19 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='postgresql://openpg:1234@localhost:5432/fyp'
-db=SQLAlchemy(app)
+db = SQLAlchemy(app)
 
-@app.route('/divtest',methods=['GET', 'POST'])
+
+@app.route('/divtest', methods=['GET', 'POST'])
 def div_test():
     temp='<h1>Hello World</h1>'
     return render_template('asd.html',temp=temp)
 
 
-@app.route('/Osama',methods=['GET', 'POST'])
+@app.route('/Osama', methods=['GET', 'POST'])
 def hello_Osama():
     return render_template('test.html')
+
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
