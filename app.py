@@ -1,10 +1,13 @@
 from flask import Flask,request,render_template,redirect,url_for,session,g
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
 import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='postgresql://openpg:1234@localhost:5432/fyp'
+str='postgresql://openpg:1234@localhost:5432/fyp'
 db=SQLAlchemy(app)
+dbb=create_engine(str)
 app.secret_key = os.urandom(24)
 
 #from models.USERS import USERS
@@ -22,9 +25,8 @@ app.secret_key = os.urandom(24)
 @app.route('/formfilling1', methods=['GET', 'POST'])
 def formfilling1():
     if g.auth == 1:
-        from models.TEAMS import TEAMS
-        teams=TEAMS.query.all();
-        return render_template('project-form.html')
+        result_set = dbb.execute("SELECT team_id FROM \"TEAMS\" ")
+        return render_template('project-form.html',teams=result_set)
     else:
         return render_template('ERROR404.html')
 
