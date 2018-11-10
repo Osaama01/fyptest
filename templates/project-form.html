@@ -34,7 +34,7 @@
 
 	<div class="container-contact100">
 		<div class="wrap-contact100">
-			<form class="contact100-form validate-form">
+			<form class="contact100-form validate-form" method="post">
 				<span class="contact100-form-title">
 					New Project
 				</span>
@@ -69,7 +69,7 @@
 
                 <div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Type Your Message">
 					<span class="label-input100">Project Description</span>
-					<textarea class="input100" name="message" placeholder="Project Description here..."></textarea>
+					<textarea class="input100" name="desc" placeholder="Project Description here..."></textarea>
 				</div>
 
                 <div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
@@ -94,14 +94,14 @@
 
 				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate = "Please Input No of Days">
 					<span class="label-input100">Enter Days</span>
-					<input class="input100" type="text" name="email" placeholder="Enter Expected Days of Completion ">
+					<input class="input100" type="text" name="days_alloted" placeholder="Enter Expected Days of Completion ">
 				</div>
 
 				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
-					<span class="label-input100">Select Priority</span>
+					<span class="label-input100">Select Team</span>
 					<div>
 						<select class="js-select2" name="team">
-							<option>Select Team</option>
+							<option>Please Choose</option>
 							{% for team in teams %}
                             <option>{{ team.team_id }}</option>
                             {% endfor %}

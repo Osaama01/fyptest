@@ -1,4 +1,7 @@
 from app import db
+from models.TEAMS import TEAMS
+from models.PORTFOLIO import PORTFOLIO
+from models.USERS import USERS
 
 class PROJECTS(db.Model):
     __tablename__ = "PROJECTS"
@@ -12,11 +15,11 @@ class PROJECTS(db.Model):
     status = db.Column(db.String(120))
     phase = db.Column(db.String(120))
     priority = db.Column(db.Integer)
-    portfolio_id = db.Column(db.Integer,db.ForeignKey('PORTFOLIO.portfolio_id'))
-    team_id = db.Column(db.Integer,db.ForeignKey('TEAMS.team_id'))
+    portfolio_id = db.Column(db.Integer,db.ForeignKey(PORTFOLIO.portfolio_id))
+    team_id = db.Column(db.Integer,db.ForeignKey(TEAMS.team_id))
     po_pending = db.Column(db.Integer)
     issues = db.Column(db.Integer)
-    username = db.Column(db.String(120),db.ForeignKey('USERS.username'))
+    username = db.Column(db.String(120),db.ForeignKey(USERS.username))
 
     def __init__(self, project_id=None, project_name=None, project_desc=None, project_type=None, start_date=None, end_date=None, days_alloted=None, status=None, phase=None, priority=None, portfolio_id=None, team_id=None, po_pending=None, issues=None, username=None):
         self.project_id = project_id

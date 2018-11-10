@@ -26,7 +26,13 @@ app.secret_key = os.urandom(24)
 def formfilling1():
     if g.auth == 1:
         result_set = dbb.execute("SELECT team_id FROM \"TEAMS\" ")
-        return render_template('project-form.html',teams=result_set)
+        if request.method=='GET':
+            return render_template('project-form.html',teams=result_set)
+        else:
+            from Functions import create_project
+            proj_details=[request.form['project_name'],request.form['desc'],request.form['proj_type'],request.form['days_alloted'],request.form['priority'],request.form['team'],session['user']]
+            create_project(proj_details)
+            return render_template('project-form.html', teams=result_set)
     else:
         return render_template('ERROR404.html')
 
