@@ -2,6 +2,7 @@ from app import db
 from models.TEAMS import TEAMS
 from models.PORTFOLIO import PORTFOLIO
 from models.USERS import USERS
+from Functions import get_del_list,get_allocated_fund,get_POs
 
 class PROJECTS(db.Model):
     __tablename__ = "PROJECTS"
@@ -20,6 +21,10 @@ class PROJECTS(db.Model):
     po_pending = db.Column(db.Integer)
     issues = db.Column(db.Integer)
     username = db.Column(db.String(120),db.ForeignKey(USERS.username))
+    allocated_funds=None
+    deliverables=None
+    PO=None
+
 
     def __init__(self, project_id=None, project_name=None, project_desc=None, project_type=None, start_date=None, end_date=None, days_alloted=None, status=None, phase=None, priority=None, portfolio_id=None, team_id=None, po_pending=None, issues=None, username=None):
         self.project_id = project_id
@@ -37,3 +42,12 @@ class PROJECTS(db.Model):
         self.po_pending = po_pending
         self.issues = issues
         self.username = username
+
+    def set(self):
+        self.allocated_funds = get_allocated_fund(self.project_id)
+        self.deliverables = get_del_list(self.project_id)
+        self.PO = get_POs(self.project_id)
+
+
+
+

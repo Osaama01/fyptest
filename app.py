@@ -31,8 +31,14 @@ def formfilling1():
         else:
             from Functions import create_project
             proj_details=[request.form['project_name'],request.form['desc'],request.form['proj_type'],request.form['days_alloted'],request.form['priority'],request.form['team'],session['user']]
-            create_project(proj_details)
-            return render_template('project-form.html', teams=result_set)
+            if create_project(proj_details):
+                error="New Project Created"
+                print (error)
+                return render_template('project-form.html', teams=result_set, error=error)
+            else:
+                error = "Failed to create new Project"
+                print (error)
+                return render_template('project-form.html', teams=result_set, error=error)
     else:
         return render_template('ERROR404.html')
 
@@ -48,23 +54,33 @@ def view_dashboard():
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    from Functions import user_verification
-    if request.method == 'POST':
-        session.pop('user',None)
-        user=user_verification(request.form['email'], request.form['pass'])
-        if(user):
-            session['user']=user.username
-            print(session['user'])
-            if(user.role=="Project Manager"):
-                print("Valid User")
-                return redirect(url_for('view_dashboard'))
-            else:
-                error = 'Not enough privileges'
-                return render_template('Login.html', error=error)
-        else:
-            error='Invalid Credentials. Please try again.'
-            return render_template('Login.html',error=error)
-    return render_template('Login.html')
+
+    from classes.ProjectManager import ProjectManager
+    pm=ProjectManager("gtour90")
+    pmlist=pm.view_projects()
+    for p in pmlist:
+        print (p.deliverables)
+        dels=p.deliverables
+        for d in dels:
+            print (d.Activities)
+    return "hello"
+    # from Functions import user_verification
+    # if request.method == 'POST':
+    #     session.pop('user',None)
+    #     user=user_verification(request.form['email'], request.form['pass'])
+    #     if(user):
+    #         session['user']=user.username
+    #         print(session['user'])
+    #         if(user.role=="Project Manager"):
+    #             print("Valid User")
+    #             return redirect(url_for('view_dashboard'))
+    #         else:
+    #             error = 'Not enough privileges'
+    #             return render_template('Login.html', error=error)
+    #     else:
+    #         error='Invalid Credentials. Please try again.'
+    #         return render_template('Login.html',error=error)
+    # return render_template('Login.html')
 
 
 @app.before_request
