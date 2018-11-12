@@ -8,7 +8,7 @@ class PROJECTS(db.Model):
     __tablename__ = "PROJECTS"
     project_id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(120))
-    project_desc = db.Column(db.String(120))
+    project_desc = db.Column(db.String(4000))
     project_type = db.Column(db.String(120))
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)

@@ -6,7 +6,7 @@ class DELIVERABLES(db.Model):
     del_id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer,db.ForeignKey('PROJECTS.project_id'))
     del_name = db.Column(db.String(120))
-    del_desc = db.Column(db.String(120))
+    del_desc = db.Column(db.String(4000))
     priority = db.Column(db.Integer)
     Activities=None
 

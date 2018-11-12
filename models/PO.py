@@ -1,11 +1,13 @@
 from app import db
+from models.PROJECTS import PROJECTS
+from models.RESOURCES import RESOURCES
 
 class PO(db.Model):
     __tablename__ = "PO"
     serial_num = db.Column(db.Integer, primary_key=True)
     po_id = db.Column(db.Integer)
-    project_id = db.Column(db.Integer,db.ForeignKey('PROJECTS.project_id'))
-    r_id = db.Column(db.Integer,db.ForeignKey('RESOURCES.r_id'))
+    project_id = db.Column(db.Integer,db.ForeignKey(PROJECTS.project_id))
+    r_id = db.Column(db.Integer,db.ForeignKey(RESOURCES.r_id))
     quantity = db.Column(db.Integer)
     status=db.Column(db.CHAR(1))
 

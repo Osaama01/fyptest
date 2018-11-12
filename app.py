@@ -57,13 +57,10 @@ def login():
 
     from classes.ProjectManager import ProjectManager
     pm=ProjectManager("gtour90")
-    pmlist=pm.view_projects()
-    for p in pmlist:
-        print (p.deliverables)
-        dels=p.deliverables
-        for d in dels:
-            print (d.Activities)
-    return "hello"
+    test=["testasd","test edited",10]
+    #pm.create_deliverable(300,test)
+    pm.edit_deliverable(2001,test)
+    return "Done"
     # from Functions import user_verification
     # if request.method == 'POST':
     #     session.pop('user',None)
