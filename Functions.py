@@ -1,14 +1,12 @@
 from models.USERS import USERS
-from app import dbb
-from app import db
-import datetime
+from cryptography.fernet import Fernet
 
 def user_verification(p_username,p_password):
     print (p_username)
     user = USERS.query.filter_by(username=p_username).first()
     if user:
         print("Success")
-        if user.password == p_password:
+        if decode(user.password) == p_password:
             print(user.role)
             return user
         else:
@@ -17,6 +15,25 @@ def user_verification(p_username,p_password):
     else:
         print("Wrong Username")
         return False
+
+def encode(password):
+    cipher_suite = Fernet(b'nIoDjdsM388MiEbvlAo3LVpbPeLME5uDEovGH_kXKFg=')
+    cipher_text = cipher_suite.encrypt((password).encode('UTF-8'))
+    cipher_text_final = cipher_suite.encrypt((cipher_text.decode('UTF-8')).encode('UTF-8'))
+    cipher_text_final=cipher_text_final.decode('UTF-8')
+    # print(cipher_text_final)
+    return cipher_text_final
+
+
+def decode(password):
+    cipher_suite = Fernet(b'nIoDjdsM388MiEbvlAo3LVpbPeLME5uDEovGH_kXKFg=')
+    password=password.encode('UTF-8')
+    plain_text = cipher_suite.decrypt(password).decode('UTF-8')
+    plain_text_final = cipher_suite.decrypt(plain_text.encode('UTF-8')).decode('UTF-8')
+    return plain_text_final
+
+
+#------------------------------------------------------------------------------------------------------------
 
 
 def get_project_list(username):
@@ -60,3 +77,21 @@ def get_POs(project_id):
     from models.PO import PO
     PO_list=PO.query.with_entities(PO.r_id,PO.quantity,PO.status).filter_by(project_id=project_id).all()
     return PO_list
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+def get_members(username):
+    from models.TEAM_MEMBERS import TEAM_MEMBERS;from models.TEAMS import TEAMS
+    team = TEAMS.query.filter_by(team_leader=username).first()
+    members=TEAM_MEMBERS.query.filter_by(team_id=team.team_id).all()
+    print(members)
+
+
+def get_leader_project_list(username):
+    from models.TEAMS import TEAMS
+    team = TEAMS.query.filter_by(team_leader=username).first()
+    from models.PROJECTS import PROJECTS
+    projects=PROJECTS.query.filter_by(team_id=team.team_id).all()
+    for p in projects:
+        p.set()
+    return projects

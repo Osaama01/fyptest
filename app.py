@@ -1,26 +1,65 @@
-from flask import Flask,request,render_template,redirect,url_for,session,g
+from flask import Flask,request,render_template,redirect,url_for,session,g,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import os
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='postgresql://openpg:1234@localhost:5432/fyp'
-str='postgresql://openpg:1234@localhost:5432/fyp'
+con_str='postgresql://openpg:1234@localhost:5432/fyp'
 db=SQLAlchemy(app)
-dbb=create_engine(str)
+dbb=create_engine(con_str)
 app.secret_key = os.urandom(24)
+from classes.ProjectManager import ProjectManager
+from classes.TeamLeader import TeamLeader
 
-#from models.USERS import USERS
-# @app.route('/formfilling', methods=['GET', 'POST'])
-# def formfilling():
-#     if request.method == 'POST':
-#         new_user=USERS(request.form['username'],request.form['password'],request.form['first_name'],request.form['last_name'],request.form['dob'],request.form['role'])
-#         db.session.add(new_user)
-#         db.session.commit()
-#         return ("Success")
-#         # else:
-#         #     return "Failed"
-#     return render_template('Formfilling.html')
+
+@app.route('/POrequest', methods=['GET', 'POST'])
+def POrequest():
+    if g.auth == 1:
+        resources=dbb.execute("SELECT resource_name FROM \"RESOURCES\" ")
+        return render_template('request-PO.html',r_list=resources)
+    else:
+        return render_template('ERROR404.html')
+
+@app.route('/projects', methods=['GET', 'POST'])
+def projects():
+    if g.auth == 1:
+        pm = ProjectManager(session['user'])
+        result_set = pm.get_projects()
+        # for i in result_set:
+        #     print(i)
+        return render_template('projects.html', result_set=result_set)
+    else:
+        return render_template('ERROR404.html')
+
+@app.route('/getdeliverables', methods=['POST'])
+def process():
+    from models.DELIVERABLES import DELIVERABLES
+    selected_proj = request.form['pid']
+    print("proj id", selected_proj)
+    pm=ProjectManager(session['user'])
+    print(pm.username)
+    dels = pm.get_deliverables(selected_proj) # type: object
+    final_del=[]
+    for d in dels:
+        final_del.append({"del_id" : d.del_id,"project_id" : d.project_id,"del_name" : d.del_name,"del_desc" : d.del_desc,"priority" : d.priority})
+    if selected_proj:
+        return jsonify({'pid': [row for row in final_del]})
+
+    return jsonify({'error': 'Missing data!'})
+
+
+@app.route('/getPdetails', methods=['POST'])
+def pdetails():
+    selected_proj = request.form['pid']
+    print("proj id", selected_proj)
+    details = dbb.execute("SELECT project_desc,issues,po_pending FROM \"PROJECTS\" where project_id=" + str(selected_proj))
+    if selected_proj:
+        return jsonify({'pdet': [dict(row) for row in details]})
+
+    return jsonify({'error': 'Missing data!'})
+
 
 @app.route('/formfilling1', methods=['GET', 'POST'])
 def formfilling1():
@@ -47,37 +86,69 @@ def formfilling1():
 @app.route('/dashboard',methods=['GET', 'POST'])
 def view_dashboard():
     if g.auth==1:
-        return render_template('Dashboard.html')
+        from models.PROJECTS import PROJECTS
+        # ============================= total issues =================================
+        # projects = PROJECTS.query.all()
+
+        current_user=session['user']
+        pm=ProjectManager(current_user)
+        projects = pm.get_projects()
+        # abc=db.engine.execute('select * from "PROJECTS" where username="sgoad9l"');
+        _list = []
+        _listProjnames = []
+        _listAllotedDays = []
+        # db.engine.execute("select days_alloted from PROJECTS where username='sgoad9l'")
+        count = 0
+        for proj in projects:
+            i = proj.issues
+            n = proj.project_name
+            d = proj.days_alloted
+            _list.insert(0, i)
+
+            if count < 20:
+                _listProjnames.insert(0, n)
+                _listAllotedDays.insert(0, d)
+
+            count = count + 1
+        total_issues = sum(_list)
+        # =============================================================================
+
+        # ============================= total Live Projects =================================
+        p = 0
+        t = 0
+        for proj in projects:
+            if proj.status != 'Completed':
+                p += 1
+            t += 1
+        # =============================================================================
+        print(_listProjnames)
+        print(_listAllotedDays)
+        return render_template('dashboard.html', total_issues=total_issues, live_projects=p,
+                               _listProjnames=_listProjnames,
+                               _listAllotedDays=_listAllotedDays, total_projs=t)
     else:
         return render_template('ERROR404.html')
 
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-
-    from classes.ProjectManager import ProjectManager
-    pm=ProjectManager("gtour90")
-    test=["testasd","test edited",10]
-    #pm.create_deliverable(300,test)
-    pm.edit_deliverable(2001,test)
-    return "Done"
-    # from Functions import user_verification
-    # if request.method == 'POST':
-    #     session.pop('user',None)
-    #     user=user_verification(request.form['email'], request.form['pass'])
-    #     if(user):
-    #         session['user']=user.username
-    #         print(session['user'])
-    #         if(user.role=="Project Manager"):
-    #             print("Valid User")
-    #             return redirect(url_for('view_dashboard'))
-    #         else:
-    #             error = 'Not enough privileges'
-    #             return render_template('Login.html', error=error)
-    #     else:
-    #         error='Invalid Credentials. Please try again.'
-    #         return render_template('Login.html',error=error)
-    # return render_template('Login.html')
+    from Functions import user_verification
+    if request.method == 'POST':
+        session.pop('user',None)
+        user=user_verification(request.form['email'], request.form['pass'])
+        if(user):
+            session['user']=user.username
+            print(session['user'])
+            if(user.role=="Project Manager"):
+                print("Valid User")
+                return redirect(url_for('view_dashboard'))
+            else:
+                error = 'Not enough privileges'
+                return render_template('Login.html', error=error)
+        else:
+            error='Invalid Credentials. Please try again.'
+            return render_template('Login.html',error=error)
+    return render_template('Login.html')
 
 
 @app.before_request

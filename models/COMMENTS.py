@@ -13,8 +13,7 @@ class COMMENTS(db.Model):
     comment=db.Column(db.String(4000))
     type=db.Column(db.String(120))
 
-    def __init__(self, serial_num=None,project_id=None, del_id=None,activity_id=None,username=None,comment=None,type=None):
-        self.serial_num = serial_num
+    def __init__(self,project_id=None, del_id=None,activity_id=None,username=None,comment=None,type=None):
         self.project_id = project_id
         self.del_id=del_id
         self.activity_id=activity_id

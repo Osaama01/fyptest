@@ -22,6 +22,7 @@ class ProjectManager(USERS):
             if p.project_id == project_id:
                 print (p.deliverables)
 
+
     def search_project(self,project_id):
         for p in self.projects:
             if p.project_id == project_id:
@@ -30,6 +31,13 @@ class ProjectManager(USERS):
 
     def get_projects(self):
         return self.projects
+
+    def get_deliverables(self,project_id):
+        deli=[]
+        x=self.projects
+        for p in self.projects:
+            if str(p.project_id) == project_id:
+                return p.deliverables
 
     def create_project(self,details_list):
         try:
@@ -64,10 +72,10 @@ class ProjectManager(USERS):
             print("Error")
             return False
 
-    def add_comment(self,project_id,comment):
+    def add_comment(self,project_id,username,comment):
         try:
 
-            comment=COMMENTS(None,project_id,None,None,None,comment)
+            comment=COMMENTS(project_id,None,None,username,comment,'comment')
             db.session.add(comment)
             db.session.commit()
             return True
