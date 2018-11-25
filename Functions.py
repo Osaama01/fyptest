@@ -1,5 +1,6 @@
 from models.USERS import USERS
 from cryptography.fernet import Fernet
+from app import dbb
 
 def user_verification(p_username,p_password):
     print (p_username)
@@ -95,3 +96,11 @@ def get_leader_project_list(username):
     for p in projects:
         p.set()
     return projects
+
+#------------------------------------------------------------------------------------------
+
+def get_del_edit_details(proj_id,del_id):
+    return dbb.execute('SELECT del_name,del_desc,priority FROM \"DELIVERABLES\" where del_id=' + str(del_id) + 'and project_id=' + str(proj_id))
+
+def get_project_edit_details(proj_id):
+    return dbb.execute('SELECT project_name,project_desc,priority FROM \"PROJECTS\" where project_id=' + str(proj_id))

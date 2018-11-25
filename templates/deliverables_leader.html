@@ -1,0 +1,564 @@
+    {% extends 'masterpage.html' %}
+    {% block head %}
+        {{ super() }}
+
+        <script src="{{ url_for('static', filename='samplechart.js') }}" xmlns=""></script>
+        <script src="{{ url_for('static', filename='chartist-plugin-axistitle.js') }}"></script>
+
+    {% endblock %}
+    {% block menuButtons %}
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Deliverables</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ti-plus"></i>
+                                <p>New Project</p>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <input id="search" style="border-radius: 1em; border-color: "  placeholder="Search Project...">
+                                    <button id="search_bar"><i class="ti-search btn-icon"></i></button>
+                              </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    {% block body %}
+        {% block navbarlinks %}
+        {% endblock %}
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">Deliverables</h4>
+                                        <p class="category">In Process</p>
+                                    </div>
+                                    <div class="content table-responsive table-full-width table-wrapper-scroll-y">
+                                        <table id="dels" class="table table-striped">
+                                            <thead>
+                                                <th>Deliverable</th>
+                                                <th>Description</th>
+                                                <th>Priority</th>
+                                            </thead>
+                                            <tbody>
+                                                {% for result in delsComp %}
+                                                    <tr style="background-color: yellowgreen;">
+                                                        <td style="display:none;">{{ result.del_id }}</td>
+                                                        <td>{{ result.del_name}}</td>
+                                                        <td>{{ result.del_desc}}</td>
+                                                        <td>{{ result.priority }}</td>
+                                                        <td><button class="btn btn-dark">Edit</button></td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% for result in delsIncomp %}
+                                                    <tr>
+                                                        <td style="display:none;">{{ result.del_id }}</td>
+                                                        <td>{{ result.del_name}}</td>
+                                                        <td>{{ result.del_desc}}</td>
+                                                        <td>{{ result.priority }}</td>
+                                                        <td>&check;</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">Team Members</h4>
+                                        <p class="category">...</p>
+                                    </div>
+                                    <div class="content table-responsive table-full-width table-wrapper-scroll-y" style="height: 470px">
+                                        <table class="table">
+                                            <tbody>
+                                            {% for i in range(5)%}
+                                                <tr>
+                                                    <td>
+                                                        <span class="ti-user"></span>
+                                                    </td>
+                                                    <td>
+                                                        Name
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">Projects</h4>
+                                        <p class="category">In Process</p>
+                                    </div>
+                                    <div class="content table-responsive table-full-width">
+                                        <h1>Yuppy Dyppy Doo</h1>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">Projects</h4>
+                                        <p class="category">In Process</p>
+                                    </div>
+                                    <div class="content table-responsive table-full-width">
+                                        <h1>Yuppy Dyppy Doo</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">Projects</h4>
+                                        <p class="category">In Process</p>
+                                    </div>
+                                    <div class="content">
+                                        <h1>Yuppy Dyppy Doo</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{#                <form id="pform">#}
+{#                    <input id="namep" name="proname">#}
+{#                    <button type="submit" id="yes"></button>#}
+{#                </form>#}
+                    <div id="projdetails" class="container-fluid" style="display: none">
+
+                    </div>
+                </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="EditDelForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+{#                    <h5 class="modal-title" id="exampleModalLongTitle">Project Details</h5>#}
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                        <div class="container-contact100">
+                            <div class="wrap-contact100">
+                            <h6 align="center">{{ error }}</h6>
+                                <form class="contact100-form validate-form" method="post">
+                                    <span class="contact100-form-title">
+                                        Edit Deliverable
+                                    </span>
+
+                                    <div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Please Type Project Name">
+                                        <span class="label-input100">DELIVERABLE NAME</span>
+                                        <input id="editpname" class="input100" type="text" name="project_name">
+                                    </div>
+
+                                    <div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Type Your Message">
+                                        <span class="label-input100">Deliverable Description</span>
+                                        <textarea id="editpdesc" class="input100" name="desc"></textarea>
+                                    </div>
+
+                                    <div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
+                                        <span class="label-input100">Select Priority</span>
+                                        <div>
+                                            <select id="editppriority" class="js-select2" name="priority">
+                                                <option>Please choose</option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                                <option>6</option>
+                                                <option>7</option>
+                                                <option>8</option>
+                                                <option>9</option>
+                                                <option>10</option>
+                                            </select>
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container-contact100-form-btn">
+                                        <button class="contact100-form-btn">
+                                            <span>
+                                                Confirm
+                                                <i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                   </div>
+                </div>
+              </div>
+            </div>
+
+
+        <!-- Modal -->
+            <div class="modal fade" id="activitymodal" tabindex="-1" role="dialog" aria-labelledby="activitymodalTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="activitymodalTitle">Project Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="header">
+                                            <h4 class="title">Details</h4>
+                                            <ul class="nav navbar-nav navbar-right">
+                                                <li class="dropdown">
+                                                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                            <input id="searchActivity" style="border-radius: 1em; border-color: "  placeholder="Search Project...">
+                                                            <button id="search_barActivity"><i class="ti-search btn-icon"></i></button>
+                                                      </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="content table-responsive table-full-width">
+                                            <span class="title-uppercase"> Deliverable: </span>
+                                            <p class="category" id="del_name"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12" >
+                                    <div class="card" style="text-align: center">
+                                        <div class="header">
+                                            <h4 class="title">Activities</h4>
+                                            <p class="category">Activities Details</p>
+                                        </div>
+                                        <div class="content table-responsive table-full-width">
+                                            <table id="activitiestbl" class="table">
+{#                                                <tbody>#}
+{#                                                    {% for del in dels %}#}
+{#                                                        <tr>#}
+{#                                                            <td>{{ del.del_name}}</td>#}
+{#                                                            <td>{{ del.priority}}</td>#}
+{#                                                        </tr>#}
+{#                                                    {% endfor %}#}
+{#                                                </tbody>#}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content" id="editactivitydiv" style="display: none">
+                        <div class="container-contact100">
+                            <div class="wrap-contact100">
+                            <h6 align="center">{{ error }}</h6>
+                                <form class="contact100-form validate-form" method="post">
+                                    <span class="contact100-form-title">
+                                        Edit Activity
+                                    </span>
+
+                                    <div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Please Type Project Name">
+                                        <span class="label-input100">ACTIVITY NAME</span>
+                                        <input id="editActivityname" class="input100" type="text" name="activity_name">
+                                    </div>
+
+                                    <div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Type Your Message">
+                                        <span class="label-input100">Project Description</span>
+                                        <textarea id="editActivitydesc" class="input100" name="activity_desc"></textarea>
+                                    </div>
+
+                                    <div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
+                                        <span class="label-input100">Select Priority</span>
+                                        <div>
+                                            <select id="editActivitypriority" class="js-select2" name="activity_priority">
+                                                <option>Please choose</option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                                <option>6</option>
+                                                <option>7</option>
+                                                <option>8</option>
+                                                <option>9</option>
+                                                <option>10</option>
+                                            </select>
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container-contact100-form-btn">
+                                        <button class="contact100-form-btn" id="editactivitybtn">
+                                            <span>
+                                                Confirm
+                                                <i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="header">
+                                            <h4 class="title">Comments</h4>
+                                        </div>
+                                        <div class="content table-responsive table-full-width" style="text-align: center">
+                                            <div id="comments_section">
+                                                COMMENTS LOADING....
+                                            </div>
+                                            <br>
+                                            <hr>
+                                            <div class="header" style="display: inline">
+                                                <h4 class="title">Add Comments</h4>
+                                            </div>
+                                            <br>
+                                            <hr>
+                                            <form id="add_commentform" style="align-content: center;display: none">
+                                                <p class="category">Title</p>
+                                                <input id="title" placeholder="Title..." style="color: black"><br>
+                                                <br>
+                                                <hr>
+                                                <p class="category">Description</p>
+                                                <input id="description" placeholder="Description..." width="100%" style="color: black">
+                                                <br>
+                                                <hr>
+                                                <p class="category">Type</p>
+                                                <select name="projtype" class="dropdown">
+                                                    <option value="simple" class="text-primary">Simple</option>
+                                                    <option value="issue" class="text-primary">Issue</option>
+                                                </select>
+                                                <br>
+                                                <hr>
+                                                <button id="submit_comment_btn" class="btn btn-primary" type="submit">Submit</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        <!------------------------------------------ Search Function ------------------------------------------>
+        <script>
+            var proj={{ projid }}
+            $("#search").on("keyup", function() {
+                var value = $(this).val();
+
+                $("#dels tr ").each(function(index) {
+                    if (index !== 0) {
+
+                        $row = $(this);
+
+                        var id = $row.find("td:nth-child(2)").text();
+
+                        if (id.indexOf(value) !== 0) {
+                            $row.hide();
+                        }
+                        else {
+                            $row.show();
+                        }
+                    }
+                });
+            });
+        </script>
+
+        <!------------------------------------------ Search Activities Function ------------------------------------------>
+        <script>
+            var proj={{ projid }}
+            $("#searchActivity").on("keyup", function() {
+                var value = $(this).val();
+
+                $("#activitiestbl tr ").each(function(index) {
+                    if (index !== 0) {
+
+                        $row = $(this);
+
+                        var id = $row.find("td:nth-child(1)").text();
+
+                        if (id.indexOf(value) !== 0) {
+                            $row.hide();
+                        }
+                        else {
+                            $row.show();
+                        }
+                    }
+                });
+            });
+        </script>
+        <!------------------------------------------Close Project------------------------------------------>
+
+        <script>
+            /*var proj={{ projid }}
+            $(function() {
+                $( "#projs tr td:nth-child(6)" ).click(function() {
+                    $(this).data('clicked', true);
+                    var p_id=$(this).closest('tr').children().closest("td").html();
+                    alert(p_id);
+
+                    $.ajax({
+                        data:{
+                            p_id: p_id
+                        },
+                        type: 'POST',
+                        url: 'http://127.0.0.1:5000/closeproject'
+                        })
+                        .done(function (data) {
+                                if (data.error){
+                                    alert('Please Wait ...');
+                                }
+                                else {
+                                    location.reload(true);
+                                }
+                            });
+                        event.preventDefault();
+                });
+            });*/
+        </script>
+
+
+        <!------------------------------------------Edit Deliverable Pop-up------------------------------------------>
+        <script>
+            $(function() {
+                $( "#dels tr td:nth-child(5)" ).click(function() {
+                    var proj = {{ projid }}
+                    $(this).data('clicked', true);
+                    var del_id=$(this).closest('tr').children().closest("td").html();
+                    $("#EditDelForm").modal('toggle');
+
+                    $.ajax({
+                        data:{
+                            del_id: del_id,
+                            proj:proj
+                        },
+                        type: 'POST',
+                        url: 'http://127.0.0.1:5000/getDel_Editdetails'
+                        })
+                            .done(function (data) {
+                                if (data.error){
+                                }
+                                else {
+                                    var jsonobj=data.DeditDet;
+                                    $(jsonobj).each(function () {
+                                        var row= $(this)[0];
+                                        $("#editpname").val(row["del_name"])
+                                        $("#editpdesc").val(row["del_desc"])
+                                        $("#editppriority").val(row["priority"])
+                                    });
+                                }
+                            });
+                        event.preventDefault();
+                });
+            });
+        </script>
+        <!------------------------------------------Deliverable's Activities Pop-up------------------------------------------>
+        <script>
+            $(function() {
+                var proj = {{ projid }}
+                    $( "#dels tr td:nth-child(5)" ).data('clicked',true);
+                    $("#dels tr").click(function () {
+                        if(($(this).find(':nth-child(5)').data('clicked')===false)) {
+                        var a = $(this).children().closest("td").html();
+                        var Delname = $(this).find(':nth-child(2)').html();
+                        $("#del_name").html(Delname);
+                        $("#add_commentform").hide();
+                        {#alert(a);#}
+                        $("#activitymodal").modal('toggle');
+                        $("#del_name").html();
+                        $.ajax({
+                            data: {
+                                delid: a,
+                                proid: proj
+                            },
+                            type: 'POST',
+                            url: 'http://127.0.0.1:5000/getactivities'
+                        })
+                            .done(function (data) {
+                                if (data.error) {
+                                }
+                                else {
+                                    var jsonobj = data.activities;
+                                    var strhtml = '<tbody><tr><th>Name</th><th>Priority</th><th>Assigned To</th><th>Comment</th><th>Edit</th><th>Check</th>';
+                                    $(jsonobj).each(function () {
+                                        var row = $(this)[0];
+                                        strhtml += '<tr><td style="display: none">' + row["activity_id"] + '</td><td>' + row["activity_name"] + '</td><td>' + row["priority"] + '</td><td>' + row["username"] + '</td><td><button class="btn btn-sm">Comment</button></td><td><span class=\"ti-pencil\"></span></td><td>&check;</td></tr></tbody>';
+                                    });
+                                    $("#activitiestbl").html(strhtml);
+                                    /*<!------------------------------------------ Activities Add Comment ------------------------------------------>*/
+                                    $( "#activitiestbl tr td:nth-child(6)" ).click(function() {
+                                        $(this).data('clicked', true);
+                                    });
+
+                                    $("#activitiestbl tr").click(function () {
+                                        if($(this).find(':nth-child(6)').data('clicked')===true){
+                                              $("#editactivitydiv").show();
+                                        }/*
+                                        else if($(this).find(':nth-child(7)').click()){
+                                            alert("Activity Marked Complete");
+                                        }
+                                        else{*/
+                                        alert("Add Comments");
+                                        /*a=$(this).children().closest("td").html();*/
+                                        $("#add_commentform").show();
+                                        //}
+                                    });
+                                }
+                            });
+                        event.preventDefault();
+                    }
+                    else
+                    {
+                        $( "#dels tr td:nth-child(5)" ).data('clicked',false);
+                    }
+                });
+            });
+        </script>
+    {% endblock %}

@@ -39,6 +39,11 @@ class ProjectManager(USERS):
             if str(p.project_id) == project_id:
                 return p.deliverables
 
+    def view_comments(self,project_id):
+        from models.COMMENTS import COMMENTS
+        comments=COMMENTS.query.with_entities(COMMENTS.username,COMMENTS.comment).filter_by(project_id=project_id).all()
+        return comments
+
     def create_project(self,details_list):
         try:
             result_set = dbb.execute("SELECT MAX(project_id) FROM \"PROJECTS\"")  # Project id for new project
@@ -97,11 +102,6 @@ class ProjectManager(USERS):
         except:
             db.session.rollback()
             return False
-
-
-    def edit_deliverable(self,del_id,details_list): #Can change name, desc and priority
-        dbb.execute(" UPDATE \"DELIVERABLES\" set del_name=\'"+details_list[0]+"\' ,del_desc=\'"+details_list[1]+"\' ,priority=\'"+str(details_list[2])+"\' where del_id="+str(del_id))
-        return True
 
 
     def edit_project(self, project_id, details_list): #Can change name, desc and priority

@@ -22,33 +22,110 @@ def POrequest():
     else:
         return render_template('ERROR404.html')
 
+# @app.route('/projects', methods=['GET', 'POST'])
+# def projects():
+#     if g.auth == 1:
+#         pm = ProjectManager(session['user'])
+#         result_set = pm.get_projects()
+#         # for i in result_set:
+#         #     print(i)
+#         return render_template('projects.html', result_set=result_set)
+#     else:
+#         return render_template('ERROR404.html')
+
 @app.route('/projects', methods=['GET', 'POST'])
 def projects():
     if g.auth == 1:
-        pm = ProjectManager(session['user'])
-        result_set = pm.get_projects()
+        tl = TeamLeader('akinson7j')
+        result_set = tl.get_projects()
         # for i in result_set:
         #     print(i)
-        return render_template('projects.html', result_set=result_set)
+        return render_template('projects_leader.html', result_set=result_set)
     else:
         return render_template('ERROR404.html')
+
+@app.route('/closeproject', methods=['POST'])
+def closeproj():
+    from models.DELIVERABLES import DELIVERABLES
+    selected_proj = request.form['p_id']
+    print("proj id", selected_proj)
+    dbb.execute('UPDATE "PROJECTS" SET phase = \'dONE\' where project_id='+str(selected_proj))  # type: object
+    print('Yahoo')
+    if selected_proj:
+        return jsonify({'success': 'Yahoo'})
+    return jsonify({'error': 'Missing data!'})
 
 @app.route('/getdeliverables', methods=['POST'])
 def process():
     from models.DELIVERABLES import DELIVERABLES
-    selected_proj = request.form['pid']
-    print("proj id", selected_proj)
+    selected_proj = request.form['proid']
+    # print("proj id", selected_proj)
     pm=ProjectManager(session['user'])
-    print(pm.username)
+    # print(pm.username)
     dels = pm.get_deliverables(selected_proj) # type: object
+    proj_comments=pm.view_comments(selected_proj)
+    print(proj_comments)
     final_del=[]
+    final_comments=[]
     for d in dels:
         final_del.append({"del_id" : d.del_id,"project_id" : d.project_id,"del_name" : d.del_name,"del_desc" : d.del_desc,"priority" : d.priority})
+    for c in proj_comments:
+         final_comments.append({"username" : c.username,"comment" : c.comment})
+    # print(final_comments)
     if selected_proj:
-        return jsonify({'pid': [row for row in final_del]})
+        return jsonify({'proid': [row for row in final_del], 'commnt': [comment for comment in final_comments]})
+    return jsonify({'error': 'Missing data!'})
+
+@app.route('/getactivities', methods=['POST'])
+def getactivities():
+
+    selected_proj = request.form['proid']
+    seleted_del = request.form['delid']
+    print("proj id", selected_proj)
+    activities = dbb.execute('SELECT * FROM \"ACTIVITIES\" where project_id='+str(selected_proj)+'and del_id='+str(seleted_del
+                                                                                                             ))  # type: object
+    print('Fetching Activities')
+    if selected_proj:
+        return jsonify({'activities': [dict(row) for row in activities]})
 
     return jsonify({'error': 'Missing data!'})
 
+@app.route('/getProj_Editdetails', methods=['POST'])
+def pEditdetails():
+    from Functions import get_project_edit_details
+    selected_proj = request.form['p_id']
+    print("proj id", selected_proj)
+    details = get_project_edit_details(selected_proj)
+    if selected_proj:
+        return jsonify({'PeditDet': [dict(row) for row in details]})
+
+    return jsonify({'error': 'Missing data!'})
+
+@app.route('/getDel_Editdetails', methods=['POST'])
+def dEditdetails():
+    from Functions import get_del_edit_details
+    selected_del = request.form['del_id']
+    selected_proj = request.form['proj']
+    print("del id", selected_del)
+    details = get_del_edit_details(selected_proj,selected_del)
+    if selected_del:
+        return jsonify({'DeditDet': [dict(row) for row in details]})
+
+    return jsonify({'error': 'Missing data!'})
+
+@app.route('/projects/leader_deliverables', methods=['POST'])
+def leader_deliverables():
+    from models.DELIVERABLES import DELIVERABLES
+    tl = TeamLeader('akinson7j')
+    selected_proj = request.form['proid']
+    print("proj id", selected_proj)
+    delsComp = tl.view_completed_dels(selected_proj)
+    print(delsComp)
+    delsIncomp = tl.view_incompleted_dels(selected_proj)
+    print(delsIncomp)
+
+    if selected_proj:
+        return render_template('deliverables_leader.html', delsComp=delsComp, delsIncomp=delsIncomp, projid=selected_proj)
 
 @app.route('/getPdetails', methods=['POST'])
 def pdetails():
@@ -68,9 +145,9 @@ def formfilling1():
         if request.method=='GET':
             return render_template('project-form.html',teams=result_set)
         else:
-            from Functions import create_project
+            pm = ProjectManager(session['user'])
             proj_details=[request.form['project_name'],request.form['desc'],request.form['proj_type'],request.form['days_alloted'],request.form['priority'],request.form['team'],session['user']]
-            if create_project(proj_details):
+            if pm.create_project(proj_details):
                 error="New Project Created"
                 print (error)
                 return render_template('project-form.html', teams=result_set, error=error)
@@ -86,46 +163,79 @@ def formfilling1():
 @app.route('/dashboard',methods=['GET', 'POST'])
 def view_dashboard():
     if g.auth==1:
-        from models.PROJECTS import PROJECTS
-        # ============================= total issues =================================
-        # projects = PROJECTS.query.all()
+        if(session['role'] == "pm"):
+            # ============================= total issues =================================
+            current_user=session['user']
+            pm=ProjectManager(current_user)
+            projects = pm.get_projects()
+            _list = []
+            _listProjnames = []
+            _listAllotedDays = []
+            count = 0
+            for proj in projects:
+                i = proj.issues
+                n = proj.project_name
+                d = proj.days_alloted
+                _list.insert(0, i)
 
-        current_user=session['user']
-        pm=ProjectManager(current_user)
-        projects = pm.get_projects()
-        # abc=db.engine.execute('select * from "PROJECTS" where username="sgoad9l"');
-        _list = []
-        _listProjnames = []
-        _listAllotedDays = []
-        # db.engine.execute("select days_alloted from PROJECTS where username='sgoad9l'")
-        count = 0
-        for proj in projects:
-            i = proj.issues
-            n = proj.project_name
-            d = proj.days_alloted
-            _list.insert(0, i)
+                if count < 20:
+                    _listProjnames.insert(0, n)
+                    _listAllotedDays.insert(0, d)
 
-            if count < 20:
-                _listProjnames.insert(0, n)
-                _listAllotedDays.insert(0, d)
+                count = count + 1
+            total_issues = sum(_list)
+            # =============================================================================
 
-            count = count + 1
-        total_issues = sum(_list)
-        # =============================================================================
+            # ============================= total Live Projects =================================
+            p = 0
+            t = 0
+            for proj in projects:
+                if proj.status != 'Completed':
+                    p += 1
+                t += 1
+            # =============================================================================
+            print(_listProjnames)
+            print(_listAllotedDays)
+            return render_template('dashboard.html', total_issues=total_issues, live_projects=p,
+                                   _listProjnames=_listProjnames,
+                                   _listAllotedDays=_listAllotedDays, total_projs=t)
 
-        # ============================= total Live Projects =================================
-        p = 0
-        t = 0
-        for proj in projects:
-            if proj.status != 'Completed':
-                p += 1
-            t += 1
-        # =============================================================================
-        print(_listProjnames)
-        print(_listAllotedDays)
-        return render_template('dashboard.html', total_issues=total_issues, live_projects=p,
-                               _listProjnames=_listProjnames,
-                               _listAllotedDays=_listAllotedDays, total_projs=t)
+        elif(session['role'] == "tl"):
+            # ============================= total issues =================================
+            current_user = session['user']
+            tl = TeamLeader(current_user)
+            projects = tl.get_projects()
+            _list = []
+            _listProjnames = []
+            _listAllotedDays = []
+            count = 0
+            for proj in projects:
+                i = proj.issues
+                n = proj.project_name
+                d = proj.days_alloted
+                _list.insert(0, i)
+
+                if count < 20:
+                    _listProjnames.insert(0, n)
+                    _listAllotedDays.insert(0, d)
+
+                count = count + 1
+            total_issues = sum(_list)
+            # =============================================================================
+
+            # ============================= total Live Projects =================================
+            p = 0
+            t = 0
+            for proj in projects:
+                if proj.status != 'Completed':
+                    p += 1
+                t += 1
+            # =============================================================================
+            print(_listProjnames)
+            print(_listAllotedDays)
+            return render_template('dashboard.html', total_issues=total_issues, live_projects=p,
+                                   _listProjnames=_listProjnames,
+                                   _listAllotedDays=_listAllotedDays, total_projs=t)
     else:
         return render_template('ERROR404.html')
 
@@ -140,6 +250,11 @@ def login():
             session['user']=user.username
             print(session['user'])
             if(user.role=="Project Manager"):
+                session['role']="pm"
+                print("Valid User")
+                return redirect(url_for('view_dashboard'))
+            elif(user.role=="Team Leader"):
+                session['role']="tl"
                 print("Valid User")
                 return redirect(url_for('view_dashboard'))
             else:
@@ -149,6 +264,7 @@ def login():
             error='Invalid Credentials. Please try again.'
             return render_template('Login.html',error=error)
     return render_template('Login.html')
+
 
 
 @app.before_request
