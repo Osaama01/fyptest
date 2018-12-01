@@ -25,7 +25,7 @@ class ProjectManager(USERS):
 
     def search_project(self,project_id):
         for p in self.projects:
-            if p.project_id == project_id:
+            if p == project_id:
                 return p
         return False
 
@@ -89,19 +89,7 @@ class ProjectManager(USERS):
             db.session.rollback()
             return False
 
-    def create_deliverable(self,project_id, details_list):
 
-        try:
-            result_set = dbb.execute("SELECT MAX(del_id) FROM \"DELIVERABLES\"")  # Deliverable id for new project
-            for r in result_set:
-                del_id = r[0] + 1
-            new_del = DELIVERABLES(del_id,project_id , details_list[0], details_list[1],details_list[2])
-            db.session.add(new_del)
-            db.session.commit()
-            return True
-        except:
-            db.session.rollback()
-            return False
 
 
     def edit_project(self, project_id, details_list): #Can change name, desc and priority

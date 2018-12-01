@@ -14,6 +14,9 @@ from classes.ProjectManager import ProjectManager
 from classes.TeamLeader import TeamLeader
 
 
+
+# ================================= Functions for Projects =============================================
+
 @app.route('/POrequest', methods=['GET', 'POST'])
 def POrequest():
     if g.auth == 1:
@@ -23,140 +26,300 @@ def POrequest():
         return render_template('ERROR404.html')
 
 # @app.route('/projects', methods=['GET', 'POST'])
-# def projects():
-#     if g.auth == 1:
-#         pm = ProjectManager(session['user'])
-#         result_set = pm.get_projects()
-#         # for i in result_set:
-#         #     print(i)
-#         return render_template('projects.html', result_set=result_set)
-#     else:
-#         return render_template('ERROR404.html')
 
 @app.route('/projects', methods=['GET', 'POST'])
 def projects():
     if g.auth == 1:
-        tl = TeamLeader('akinson7j')
-        result_set = tl.get_projects()
-        # for i in result_set:
-        #     print(i)
-        return render_template('projects_leader.html', result_set=result_set)
+        if (session['role'] == "pm"):
+            pm = ProjectManager(session['user'])
+            result_set = pm.get_projects()
+            # for i in result_set:
+            #     print(i)
+            return render_template('projects.html', result_set=result_set)
+
+        elif (session['role'] == "tl"):
+            tl = TeamLeader(session['user'])
+            result_set = tl.get_projects()
+            # for i in result_set:
+            #     print(i)
+            return render_template('projects_leader.html', result_set=result_set)
+
+        else:
+            return render_template('ERROR404.html')
+
     else:
         return render_template('ERROR404.html')
 
+# @app.route('/projects', methods=['GET', 'POST'])
+# def projects():
+#     if g.auth == 1:
+#         tl = TeamLeader('akinson7j')
+#         result_set = tl.get_projects()
+#         # for i in result_set:
+#         #     print(i)
+#         return render_template('projects_leader.html', result_set=result_set)
+#     else:
+#         return render_template('ERROR404.html')
+
 @app.route('/closeproject', methods=['POST'])
 def closeproj():
-    from models.DELIVERABLES import DELIVERABLES
-    selected_proj = request.form['p_id']
-    print("proj id", selected_proj)
-    dbb.execute('UPDATE "PROJECTS" SET phase = \'dONE\' where project_id='+str(selected_proj))  # type: object
-    print('Yahoo')
-    if selected_proj:
+    if g.auth == 1:
+        pm=ProjectManager('gtour90')
+        selected_proj = request.form['p_id']
+        print("proj id", selected_proj)
+        pm.close_project(selected_proj)
+        print('Yahoo')
+        if selected_proj:
+            return jsonify({'success': 'Yahoo'})
+        return jsonify({'error': 'Missing data!'})
+
+    else:
+        return render_template('ERROR404.html')
+
+@app.route('/confirmEditProj', methods=['POST'])
+def editproj():
+    proid=request.form['proid']
+    pname=request.form['pname']
+    pdesc=request.form['pdesc']
+    ppriority=request.form['ppriority']
+    print("proid", proid)
+    print("pname", pname)
+    print("pdesc", pdesc)
+    print("ppriority", ppriority)
+    # dbb.execute('UPDATE "PROJECTS" SET phase = \'dONE\' where project_id='+str(selected_proj))  # type: object
+    if proid:
         return jsonify({'success': 'Yahoo'})
     return jsonify({'error': 'Missing data!'})
 
-@app.route('/getdeliverables', methods=['POST'])
-def process():
-    from models.DELIVERABLES import DELIVERABLES
-    selected_proj = request.form['proid']
-    # print("proj id", selected_proj)
-    pm=ProjectManager(session['user'])
-    # print(pm.username)
-    dels = pm.get_deliverables(selected_proj) # type: object
-    proj_comments=pm.view_comments(selected_proj)
-    print(proj_comments)
-    final_del=[]
-    final_comments=[]
-    for d in dels:
-        final_del.append({"del_id" : d.del_id,"project_id" : d.project_id,"del_name" : d.del_name,"del_desc" : d.del_desc,"priority" : d.priority})
-    for c in proj_comments:
-         final_comments.append({"username" : c.username,"comment" : c.comment})
-    # print(final_comments)
-    if selected_proj:
-        return jsonify({'proid': [row for row in final_del], 'commnt': [comment for comment in final_comments]})
-    return jsonify({'error': 'Missing data!'})
-
-@app.route('/getactivities', methods=['POST'])
-def getactivities():
-
-    selected_proj = request.form['proid']
-    seleted_del = request.form['delid']
-    print("proj id", selected_proj)
-    activities = dbb.execute('SELECT * FROM \"ACTIVITIES\" where project_id='+str(selected_proj)+'and del_id='+str(seleted_del
-                                                                                                             ))  # type: object
-    print('Fetching Activities')
-    if selected_proj:
-        return jsonify({'activities': [dict(row) for row in activities]})
-
-    return jsonify({'error': 'Missing data!'})
-
 @app.route('/getProj_Editdetails', methods=['POST'])
-def pEditdetails():
-    from Functions import get_project_edit_details
-    selected_proj = request.form['p_id']
-    print("proj id", selected_proj)
-    details = get_project_edit_details(selected_proj)
-    if selected_proj:
-        return jsonify({'PeditDet': [dict(row) for row in details]})
+def getProj_Editdetails():
+    if g.auth == 1:
+        from Functions import get_project_edit_details
+        selected_proj = request.form['p_id']
+        print("proj id", selected_proj)
+        details = get_project_edit_details(selected_proj)
+        if selected_proj:
+            return jsonify({'PeditDet': [dict(row) for row in details]})
 
-    return jsonify({'error': 'Missing data!'})
-
-@app.route('/getDel_Editdetails', methods=['POST'])
-def dEditdetails():
-    from Functions import get_del_edit_details
-    selected_del = request.form['del_id']
-    selected_proj = request.form['proj']
-    print("del id", selected_del)
-    details = get_del_edit_details(selected_proj,selected_del)
-    if selected_del:
-        return jsonify({'DeditDet': [dict(row) for row in details]})
-
-    return jsonify({'error': 'Missing data!'})
-
-@app.route('/projects/leader_deliverables', methods=['POST'])
-def leader_deliverables():
-    from models.DELIVERABLES import DELIVERABLES
-    tl = TeamLeader('akinson7j')
-    selected_proj = request.form['proid']
-    print("proj id", selected_proj)
-    delsComp = tl.view_completed_dels(selected_proj)
-    print(delsComp)
-    delsIncomp = tl.view_incompleted_dels(selected_proj)
-    print(delsIncomp)
-
-    if selected_proj:
-        return render_template('deliverables_leader.html', delsComp=delsComp, delsIncomp=delsIncomp, projid=selected_proj)
+        return jsonify({'error': 'Missing data!'})
+    else:
+        return render_template('ERROR404.html')
 
 @app.route('/getPdetails', methods=['POST'])
-def pdetails():
-    selected_proj = request.form['pid']
-    print("proj id", selected_proj)
-    details = dbb.execute("SELECT project_desc,issues,po_pending FROM \"PROJECTS\" where project_id=" + str(selected_proj))
-    if selected_proj:
-        return jsonify({'pdet': [dict(row) for row in details]})
+def getPdetails():
+    if g.auth == 1:
+        selected_proj = request.form['pid']
+        print("proj id", selected_proj)
+        details = dbb.execute("SELECT project_desc,issues,po_pending FROM \"PROJECTS\" where project_id=" + str(selected_proj))
+        if selected_proj:
+            return jsonify({'pdet': [dict(row) for row in details]})
 
-    return jsonify({'error': 'Missing data!'})
+        return jsonify({'error': 'Missing data!'})
+    else:
+        return render_template('ERROR404.html')
 
 
 @app.route('/formfilling1', methods=['GET', 'POST'])
 def formfilling1():
     if g.auth == 1:
-        result_set = dbb.execute("SELECT team_id FROM \"TEAMS\" ")
-        if request.method=='GET':
-            return render_template('project-form.html',teams=result_set)
-        else:
-            pm = ProjectManager(session['user'])
-            proj_details=[request.form['project_name'],request.form['desc'],request.form['proj_type'],request.form['days_alloted'],request.form['priority'],request.form['team'],session['user']]
-            if pm.create_project(proj_details):
-                error="New Project Created"
-                print (error)
-                return render_template('project-form.html', teams=result_set, error=error)
+        if(session['role'] == "pm"):
+            result_set = dbb.execute("SELECT team_id FROM \"TEAMS\" ")
+            if request.method=='GET':
+                return render_template('project-form.html',teams=result_set)
             else:
-                error = "Failed to create new Project"
-                print (error)
-                return render_template('project-form.html', teams=result_set, error=error)
+                pm = ProjectManager(session['user'])
+                proj_details=[request.form['project_name'],request.form['desc'],request.form['proj_type'],request.form['days_alloted'],request.form['priority'],request.form['team'],session['user']]
+                if pm.create_project(proj_details):
+                    error="New Project Created"
+                    print (error)
+                    return render_template('project-form.html', teams=result_set, error=error)
+                else:
+                    error = "Failed to create new Project"
+                    print (error)
+                    return render_template('project-form.html', teams=result_set, error=error)
+        else:
+            render_template('ERROR404.html')
     else:
         return render_template('ERROR404.html')
+
+
+@app.route('/submitProjcomment', methods=['POST'])
+def submitProjcomment():
+    proid=request.form['proid']
+    ctitle=request.form['ctitle']
+    cdesc=request.form['cdesc']
+    ctype=request.form['ctype']
+    print("proid", proid)
+    print("ctitle", ctitle)
+    print("cdesc", cdesc)
+    print("ctype", ctype)
+    # dbb.execute('UPDATE "PROJECTS" SET phase = \'dONE\' where project_id='+str(selected_proj))  # type: object
+    if proid:
+        return jsonify({'success': 'Yahoo'})
+    return jsonify({'error': 'Missing data!'})
+
+
+# ================================= Functions for Deliverables =============================================
+
+
+@app.route('/getdeliverables', methods=['POST'])
+def process():
+    if g.auth== 1:
+        selected_proj = request.form['proid']
+        # print("proj id", selected_proj)
+        pm=ProjectManager(session['user'])
+        # print(pm.username)
+        dels = pm.get_deliverables(selected_proj) # type: object
+        proj_comments=pm.view_comments(selected_proj)
+        print(proj_comments)
+        final_del=[]
+        final_comments=[]
+        for d in dels:
+            final_del.append({"del_id" : d.del_id,"project_id" : d.project_id,"del_name" : d.del_name,"del_desc" : d.del_desc,"priority" : d.priority})
+        for c in proj_comments:
+             final_comments.append({"username" : c.username,"comment" : c.comment})
+        # print(final_comments)
+        if selected_proj:
+            return jsonify({'proid': [row for row in final_del], 'commnt': [comment for comment in final_comments]})
+        return jsonify({'error': 'Missing data!'})
+
+    else:
+        return render_template('ERROR404.html')
+
+@app.route('/getDel_Editdetails', methods=['POST'])
+def getDel_Editdetails():
+    if g.auth == 1:
+        from Functions import get_del_edit_details
+        # final_dellist=[]
+        selected_del = request.form['delid']
+        selected_proj = request.form['proj']
+        print("del id", selected_del)
+        details = get_del_edit_details(selected_proj, selected_del)
+        # final_dellist.append({"del_name" : details.del_name,"del_desc" : details.del_desc ,"priority" : details.priority})
+        # print(final_dellist)
+        if selected_del:
+            return jsonify({'DeditDet': [dict(row) for row in details]})
+
+        return jsonify({'error': 'Missing data!'})
+    else:
+        return render_template('ERROR404.html')
+
+@app.route('/confirmEditDel', methods=['POST'])
+def confirmEditDel():
+    proid = request.form['proid']
+    delid = request.form['delid']
+    pname = request.form['pname']
+    pdesc = request.form['pdesc']
+    ppriority = request.form['ppriority']
+    print("delid", delid)
+    print("proid", proid)
+    print("pname", pname)
+    print("pdesc", pdesc)
+    print("ppriority", ppriority)
+    # dbb.execute('UPDATE "PROJECTS" SET phase = \'dONE\' where project_id='+str(selected_proj))  # type: object
+    if proid:
+        return jsonify({'success': 'Yahoo'})
+    return jsonify({'error': 'Missing data!'})
+
+@app.route('/projects/leader_deliverables', methods=['POST'])
+def leader_deliverables():
+    if g.auth == 1:
+        tl = TeamLeader('akinson7j')
+        selected_proj = request.form['proid']
+        print("proj id", selected_proj)
+        delsComp = tl.view_completed_dels(selected_proj)
+        print(delsComp)
+        delsIncomp = tl.view_incompleted_dels(selected_proj)
+        print(delsIncomp)
+
+        if selected_proj:
+            return render_template('deliverables_leader.html', delsComp=delsComp, delsIncomp=delsIncomp, projid=selected_proj)
+
+    else:
+        return render_template('ERROR404.html')
+
+
+# ================================= Functions for Activity =============================================
+
+
+@app.route('/submitActivitycomment', methods=['POST'])
+def submitActivitycomment():
+    proid=request.form['proid']
+    delid=request.form['delid']
+    activityid=request.form['activityid']
+    ctitle=request.form['ctitle']
+    cdesc=request.form['cdesc']
+    ctype=request.form['ctype']
+    print("delid", delid)
+    print("activityid", activityid)
+    print("proid", proid)
+    print("ctitle", ctitle)
+    print("cdesc", cdesc)
+    print("ctype", ctype)
+    # dbb.execute('UPDATE "PROJECTS" SET phase = \'dONE\' where project_id='+str(selected_proj))  # type: object
+    if proid:
+        return jsonify({'success': 'Yahoo'})
+    return jsonify({'error': 'Missing data!'})
+
+@app.route('/getactivities', methods=['POST'])
+def getactivities():
+    if g.auth == 1:
+        tl=TeamLeader('akinson7j')
+        selected_proj = request.form['proid']
+        seleted_del = request.form['delid']
+        print("proj id", selected_proj)
+        activities =tl.get_activities(selected_proj,seleted_del)
+        final_activities=[]
+        for a in activities:
+            final_activities.append({"activity_id" : a.activity_id,"activity_name" : a.activity_name,"project_id" : a.project_id,"start_date" : a.start_date,"end_date" : a.end_date,"days_alloted" : a.days_alloted,"del_id" : a.del_id,"priority" : a.priority,"username" : a.username,"status" : a.status})
+        print('Fetching Activities')
+        if selected_proj:
+            return jsonify({'activities': [row for row in final_activities]})
+
+        return jsonify({'error': 'Missing data!'})
+    else:
+        return render_template('ERROR404.html')
+
+@app.route('/confirmEditActivity', methods=['POST'])
+def confirmEditActivity():
+    proid = request.form['proid']
+    delid = request.form['delid']
+    activityid = request.form['activityid']
+    activityname = request.form['activityname']
+    activityassto = request.form['activityassto']
+    activitypriority = request.form['activitypriority']
+    print("delid", delid)
+    print("activityid", activityid)
+    print("proid", proid)
+    print("activityname", activityname)
+    print("activityassto", activityassto)
+    print("activitypriority", activitypriority)
+    # dbb.execute('UPDATE "PROJECTS" SET phase = \'dONE\' where project_id='+str(selected_proj))  # type: object
+    if proid:
+        return jsonify({'success': 'Yahoo'})
+    return jsonify({'error': 'Missing data!'})
+
+
+@app.route('/approveActivity', methods=['POST'])
+def approveActivity():
+    proid=request.form['proid']
+    delid=request.form['delid']
+    activityid=request.form['activityid']
+    print("approve activity")
+    print("delid", delid)
+    print("activityid", activityid)
+    print("proid", proid)
+    # dbb.execute('UPDATE "PROJECTS" SET phase = \'dONE\' where project_id='+str(selected_proj))  # type: object
+    if proid:
+        return jsonify({'success': 'Yahoo'})
+    return jsonify({'error': 'Missing data!'})
+
+
+
+
+
+# =====================================================================================================================
+
 
 
 
@@ -196,9 +359,9 @@ def view_dashboard():
             # =============================================================================
             print(_listProjnames)
             print(_listAllotedDays)
-            return render_template('dashboard.html', total_issues=total_issues, live_projects=p,
+            return render_template('Dashboard.html', total_issues=total_issues, live_projects=p,
                                    _listProjnames=_listProjnames,
-                                   _listAllotedDays=_listAllotedDays, total_projs=t)
+                                   _listAllotedDays=_listAllotedDays, total_projs=t,auth=session['role'])
 
         elif(session['role'] == "tl"):
             # ============================= total issues =================================
@@ -231,11 +394,13 @@ def view_dashboard():
                     p += 1
                 t += 1
             # =============================================================================
+
+            team_members=tl.get_members()
             print(_listProjnames)
             print(_listAllotedDays)
-            return render_template('dashboard.html', total_issues=total_issues, live_projects=p,
+            return render_template('dashboard_leader.html', total_issues=total_issues, live_projects=p,
                                    _listProjnames=_listProjnames,
-                                   _listAllotedDays=_listAllotedDays, total_projs=t)
+                                   _listAllotedDays=_listAllotedDays, total_projs=t,auth=session['role'],team_members=team_members)
     else:
         return render_template('ERROR404.html')
 
@@ -264,7 +429,6 @@ def login():
             error='Invalid Credentials. Please try again.'
             return render_template('Login.html',error=error)
     return render_template('Login.html')
-
 
 
 @app.before_request

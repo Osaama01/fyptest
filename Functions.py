@@ -72,7 +72,10 @@ def get_activities(del_id):
 def get_allocated_fund(project_id):
     from models.FINANCES import FINANCES
     allocated_fund=FINANCES.query.with_entities(FINANCES.allocation).filter_by(project_id=project_id).first()
-    return allocated_fund[0]
+    if(allocated_fund):
+        return allocated_fund[0]
+    else:
+        return 0
 
 def get_POs(project_id):
     from models.PO import PO
@@ -85,7 +88,7 @@ def get_members(username):
     from models.TEAM_MEMBERS import TEAM_MEMBERS;from models.TEAMS import TEAMS
     team = TEAMS.query.filter_by(team_leader=username).first()
     members=TEAM_MEMBERS.query.filter_by(team_id=team.team_id).all()
-    print(members)
+    return members
 
 
 def get_leader_project_list(username):
