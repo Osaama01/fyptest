@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>New Activity</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="../static/project-form/images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/vendor/noui/nouislider.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/project-form/css/util.css">
+	<link rel="stylesheet" type="text/css" href="../static/project-form/css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
+
+
+	<div class="container-contact100">
+		<div class="wrap-contact100">
+        <h6 align="center">{{ error }}</h6>
+			<form class="contact100-form validate-form" method="post">
+				<span class="contact100-form-title">
+					New Activity
+				</span>
+
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Please Type Activity Name">
+					<span class="label-input100">Activity Name</span>
+					<input class="input100" type="text" name="activity_name" placeholder="Enter Activity Name">
+				</div>
+
+                <div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate = "Please Input No of Days">
+					<span class="label-input100">Enter Days</span>
+					<input class="input100" type="text" name="days_alloted" placeholder="Enter Expected Days of Completion ">
+				</div>
+
+                 <div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
+					<span class="label-input100">Select Priority</span>
+					<div>
+						<select class="js-select2" name="priority">
+							<option>Please choose</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+                            <option>4</option>
+							<option>5</option>
+							<option>6</option>
+                            <option>7</option>
+							<option>8</option>
+							<option>9</option>
+                            <option>10</option>
+						</select>
+						<div class="dropDownSelect2"></div>
+					</div>
+				</div>
+
+
+				<div class="container-contact100-form-btn">
+					<button class="contact100-form-btn">
+						<span>
+							Submit
+							<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+						</span>
+					</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+
+
+<!--===============================================================================================-->
+	<script src="../static/project-form/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/project-form/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/project-form/vendor/bootstrap/js/popper.js"></script>
+	<script src="../static/project-form/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/project-form/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/project-form/js/main.js"></script>
+
+
+<script src="vendor/select2/select2.min.js"></script>
+	<script>
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+		})
+	</script>
+
+</body>
+</html>
