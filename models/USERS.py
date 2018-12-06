@@ -16,3 +16,10 @@ class USERS(db.Model):
         self.last_name=lastname
         self.dob=dob
         self.role=role
+
+
+    def getname(self):
+        return self.first_name
+
+    def getusername(self):
+        return self.username

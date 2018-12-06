@@ -61,10 +61,10 @@ class TeamLeader(USERS):
             return False
 
 
-    def add_comment(self,project_id,del_id,activity_id,p_comment):
+    def add_comment(self,project_id,del_id,activity_id,username,p_comment):
         try:
 
-            comment=COMMENTS(None,project_id,del_id,activity_id,None,p_comment)
+            comment=COMMENTS(None,project_id,del_id,activity_id,username,p_comment)
             db.session.add(comment)
             db.session.commit()
             return True
@@ -73,10 +73,22 @@ class TeamLeader(USERS):
             db.session.rollback()
             return False
 
-    def add_comment(self,project_id,comment):
+    def report_issuex(self,project_id,del_id,activity_id,username,issue):
         try:
 
-            comment=COMMENTS(project_id,None,None,None,comment)
+            comment=COMMENTS(project_id,del_id,activity_id,username,issue,'issue')
+            db.session.add(comment)
+            db.session.commit()
+            return True
+
+        except:
+            db.session.rollback()
+            return False
+
+    def add_comment(self,project_id,username,comment):
+        try:
+
+            comment=COMMENTS(project_id,None,None,username,comment)
             db.session.add(comment)
             db.session.commit()
             return True

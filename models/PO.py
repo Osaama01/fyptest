@@ -18,3 +18,6 @@ class PO(db.Model):
         self.r_id=r_id
         self.quantity=quantity
         self.status=status
+
+    def view_details(self):
+        print(self.project_id,self.r_id,self.quantity)

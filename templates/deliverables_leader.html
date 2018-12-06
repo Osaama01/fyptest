@@ -74,7 +74,6 @@
                                                         <td>{{ result.del_desc}}</td>
                                                         <td>{{ result.priority }}</td>
                                                         <td><button class="btn btn-dark">Edit</button></td>
-                                                        <td>&check;</td>
                                                     </tr>
                                                 {% endfor %}
                                             </tbody>
@@ -223,11 +222,19 @@
                                         <span class="label-input100">ACTIVITY NAME</span>
                                         <input id="editActivityname" class="input100" type="text" name="activity_name">
                                     </div>
-
-                                    <div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Type Your Message">
-                                        <span class="label-input100">Assigned to</span>
-                                        <textarea id="editActivityAssto" class="input100" name="activity_desc"></textarea>
+                                    <div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
+                                        <span class="label-input100">Select Member</span>
+                                        <div>
+                                            <select id="editActivityAssto" class="js-select2" name="team_member">
+                                            <option>Please choose</option>
+                                            {% for member in members %}
+                                            <option>{{ member.username }}</option>
+                                            {% endfor %}
+                                            </select>
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
                                     </div>
+
 
                                     <div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
                                         <span class="label-input100">Select Priority</span>
@@ -401,7 +408,7 @@
                 $( "#dels tr td:nth-child(5)" ).click(function() {
                     alert('child');
                     $(this).data('clicked', true);
-                    var delid=$(this).closest('tr').children().closest("td").html();
+                    delid=$(this).closest('tr').children().closest("td").html();
                     alert(delid);
                     $("#EditDelForm").modal('toggle');
 

@@ -52,11 +52,14 @@
     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
     <link href="../static/assets/css/themify-icons.css" rel="stylesheet">
 
+    <script src="{{ url_for('static', filename='samplechart.js') }}"></script>
+    <script src="{{ url_for('static', filename='chartist-plugin-axistitle.js') }}"></script>
+    <script src="{{ url_for('static', filename='chartist-plugin-tooltip.js') }}"></script>
 </head>
 <body>
 
 <div class="wrapper">
-    <div class="sidebar" data-background-color="white" data-active-color="success">
+    <div class="sidebar" data-background-color="black" data-active-color="success">
 
     <!--
 		Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black"

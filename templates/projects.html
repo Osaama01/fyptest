@@ -21,7 +21,7 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href={{ url_for('formfilling1') }}>
                                 <i class="ti-plus"></i>
                                 <p>New Project</p>
                             </a>
@@ -31,12 +31,7 @@
                                     <input id="search" style="border-radius: 1em;"  placeholder="Search Project...">
                               </a>
                         </li>
-                        <li>
-                            <a href="#">
-                                <i class="ti-settings"></i>
-                                <p>Settings</p>
-                            </a>
-                        </li>
+
                     </ul>
 
                 </div>
@@ -67,7 +62,7 @@
                                             </thead>
                                             <tbody>
                                                 {% for result in result_set %}
-                                                    {% if result.status != 'Completed' %}
+                                                    {% if result.status != 'Completed' and result.phase !='Closure' %}
                                                         <tr>
                                                             <td style="display:none;">{{ result.project_id }}</td>
                                                             <td>{{ result.project_name}}</td>
@@ -78,7 +73,7 @@
                                                             <td><button class="btn btn-dark">Edit</button></td>
                                                         </tr>
                                                     {% endif %}
-                                                    {% if result.phase == 'Closure' %}
+                                                    {% if ((result.phase == 'Closure') and (result.status != 'Completed'))  %}
                                                         <tr style="background-color: yellowgreen;">
                                                             <td style="display:none;">{{ result.project_id }}</td>
                                                             <td>{{ result.project_name}}</td>
@@ -272,12 +267,12 @@
                                             </div>
                                             <br>
                                             <hr>
-                                            <div class="header" style="display: inline">
+                                            <div class="header">
                                                 <h4 class="title">Add Comments</h4>
                                             </div>
                                             <br>
                                             <hr>
-                                            <form id="add_commentform" style="align-content: center" style="display: inline">
+                                            <form id="add_commentform" style="align-content: center">
                                                 <p class="category">Title</p>
                                                 <input id="ctitle" placeholder="Title..." style="color: black"><br>
                                                 <br>
@@ -453,6 +448,14 @@
                                         strhtml += '<tr><td>' + row["del_name"] + '</td><td>' + row["priority"] + '</td></tr></tbody></table>';
                                     });
                                     $('#deliv').html(strhtml);
+
+                                    var jsonobj = data.commnt;
+                                    var strhtml = '<table class=\'table table-striped\' style><tbody><tr><th>Name</th><th>Comment</th>';
+                                    $(jsonobj).each(function () {
+                                        var row = $(this)[0];
+                                        strhtml += '<tr><td>' + row["username"] + '</td><td>' + row["comment"] + '</td></tr></tbody></table>';
+                                    });
+                                    $('#comments_section').html(strhtml);
                                 }
                             });
                         event.preventDefault();

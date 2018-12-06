@@ -566,7 +566,7 @@ hr {
 .sidebar[data-background-color="black"]:after, .sidebar[data-background-color="black"]:before,
 .off-canvas-sidebar[data-background-color="black"]:after,
 .off-canvas-sidebar[data-background-color="black"]:before {
-    background-color: #212120;
+    background-color: darkslategrey;
 }
 
 .sidebar[data-background-color="black"] .logo,
@@ -576,7 +576,7 @@ hr {
 
 .sidebar[data-background-color="black"] .logo p,
 .off-canvas-sidebar[data-background-color="black"] .logo p {
-    color: #FFFFFF;
+    color: wheat;
 }
 
 .sidebar[data-background-color="black"] .logo .simple-text,
@@ -1667,14 +1667,6 @@ textarea.form-control {
     color: darkslategrey;
 }
 
-.table-striped:hover tr > th{
-    color: #ffe8a1;
-}
-
-.table-striped th:hover{
-    color: #ffe8a1;
-}
-
 .table-striped tr:hover{
     color: darkslategrey;
 }
@@ -2322,6 +2314,7 @@ textarea.form-control {
 }
 
 .card .header {
+    background-color : darkslategrey;
     padding: 20px 20px 0;
 }
 
@@ -2355,7 +2348,7 @@ textarea.form-control {
 
 .card .title {
     margin: 0;
-    color: #252422;
+    color: wheat;
     font-weight: 300;
 }
 
@@ -2366,7 +2359,7 @@ textarea.form-control {
 }
 
 .card:hover .ct-label{
-    color: wheat;
+    color: black;
 }
 .card .avatar {
     width: 50px;
@@ -2565,9 +2558,8 @@ textarea.form-control {
 }
 
 .card:hover{
-    transform: scale(1.05,1.05);
-    background-color: #3a283d;
-    color: wheat;
+    transform: scale(1.01,1.01);
+
 }
 .ct-label {
     fill: rgba(0, 0, 0, 0.4);
@@ -2748,20 +2740,29 @@ textarea.form-control {
 }
 
 .ct-series-a .ct-point, .ct-series-a .ct-line, .ct-series-a .ct-bar, .ct-series-a .ct-slice-donut {
-    stroke: #c80000;
+    stroke: #0c5460;
 }
 
 .ct-series-a:hover .ct-point:hover, .ct-series-a:hover .ct-line:hover, .ct-series-a:hover .ct-bar:hover, .ct-series-a:hover {
-    stroke: #ffe8a1;
+    stroke: darkslategray;
 }
 
 .ct-slice-donut:hover {
-    stroke: darkslategray;
+    stroke: maroon;
+}
+
+.ct-slice-donut:hover{
+    color: wheat;
 }
 
 .ct-series-a .ct-slice-pie, .ct-series-a .ct-area {
     fill: #68B3C8;
 }
+
+.ct-series-a:hover .ct-slice-pie:hover, .ct-series-a:hover .ct-area:hover {
+    fill: darkcyan;
+}
+
 
 .ct-series-b .ct-point, .ct-series-b .ct-line, .ct-series-b .ct-bar, .ct-series-b .ct-slice-donut {
     stroke: #F3BB45;

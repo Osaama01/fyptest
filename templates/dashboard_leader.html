@@ -8,6 +8,8 @@
         <script type="text/javascript">
         var C1_pnames={{ _listProjnames|tojson }}
         var C1_Adays={{ _listAllotedDays|tojson }}
+        var allocatedf={{ allocatedfunds|tojson }}
+        var releasef={{ releasedfunds|tojson }}
 
         {#var C2_lables={{  }}#}
         var C2_series=[{{ live_projects }},{{ total_projs-live_projects }}]
@@ -224,25 +226,42 @@
                 $( "#budgetcard" ).click(function() {
                     $("#popupdiv").show(function () {
                         $(this).data('clicked',true);
-                        var chartee = new Chartist.Pie('#chart5', {
-                          series: C2_series,
-                          labels: ['In Progress','Completed']
-                        }, {
-                          donut: true,
-                          showLabel: true
-                        });
-                    });
-                });
-                $( "#issuescard" ).click(function() {
-                    $("#popupdiv").show(function () {
-                        $(this).data('clicked',true);
-                        var chartee = new Chartist.Pie('#chart5', {
-                          series: C2_series,
-                          labels: ['In Progress','Completed']
-                        }, {
-                          donut: true,
-                          showLabel: true
-                        });
+                        var chartee = new Chartist.Bar('#chart5', {
+                          series: [allocatedf,releasef],
+                          labels: C1_pnames
+                        },{
+                            seriesBarDistance: 30,
+                            horizontalBars: false,
+                            axisY: {
+                              offset:100
+                            },
+                            axisX: {
+                              offset:70
+                            },
+                            plugins: [
+                              Chartist.plugins.ctAxisTitle({
+                                axisX: {
+                                  axisTitle: 'Projects',
+                                  axisClass: 'ct-axis-title',
+                                  offset: {
+                                    x: -60,
+                                    y: 70
+                                  },
+                                  textAnchor: 'middle'
+                                },
+                                axisY: {
+                                  axisTitle: 'Days',
+                                  axisClass: 'ct-axis-title',
+                                  offset: {
+                                    x: 0,
+                                    y: 0
+                                  },
+                                  textAnchor: 'top',
+                                  flipTitle: true
+                                }
+                              }),
+                              Chartist.plugins.tooltip()
+                            ]});
                     });
                 });
             });

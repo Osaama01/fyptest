@@ -89,11 +89,23 @@ class ProjectManager(USERS):
             db.session.rollback()
             return False
 
+    def report_issue(self, project_id,username,issue):
+        try:
+
+            comment=COMMENTS(project_id,None,None,username,issue,'issue')
+            db.session.add(comment)
+            db.session.commit()
+            return True
+
+        except:
+            db.session.rollback()
+            return False
+
 
 
 
     def edit_project(self, project_id, details_list): #Can change name, desc and priority
-        dbb.execute(" UPDATE \"PROJECTS\" set project_name=\'" + details_list[0] + "\' ,proj_desc=\'" + details_list[1] + "\' ,priority=\'" + str(details_list[2]) + "\' where project_id=" + str(project_id))
+        dbb.execute(" UPDATE \"PROJECTS\" set project_name=\'" + details_list[0] + "\' ,project_desc=\'" + details_list[1] + "\' ,priority=\'" + str(details_list[2]) + "\' where project_id=" + str(project_id))
         return True
 
     def request_PO(self,project_id,list):
