@@ -291,6 +291,7 @@ def leader_deliverables():
         if(session['role'] == "tl"):
             tl = TeamLeader(session['user'])
             selected_proj = request.form['proid']
+            session['proid']=selected_proj
             print("proj id", selected_proj)
             delsComp = tl.view_completed_dels(selected_proj)
             print(delsComp)
@@ -313,15 +314,15 @@ def formfilling2():
                 return render_template('del-form.html')
             else:
                 tl = TeamLeader(session['user'])
-                del_details=[request.form['del_name'],request.form['desc'],session['user']]
-                if tl.create_deliverable(123,del_details):
+                del_details=[request.form['del_name'],request.form['desc'],request.form['priority']]
+                if tl.create_deliverable(session['proid'],del_details):
                     error="New Deliverable Created"
                     print (error)
-                    return render_template('project-form.html',error=error)
+                    return render_template('del-form.html',error=error)
                 else:
                     error = "Failed to create new Deliverable"
                     print (error)
-                    return render_template('project-form.html', error=error)
+                    return render_template('del-form.html', error=error)
         else:
             render_template('ERROR404.html')
     else:
@@ -484,6 +485,8 @@ def view_dashboard():
 
                 count = count + 1
             total_issues = sum(_list)
+            total_funds=(int)(sum(allocatedfunds)/1000000)
+            total_funds=str(total_funds)+'M'
             # =============================================================================
 
             # ============================= total Live Projects =================================
@@ -498,7 +501,7 @@ def view_dashboard():
             print(_listAllotedDays)
             return render_template('Dashboard.html', allocatedfunds=allocatedfunds, releasedfunds=releasedfunds, total_issues=total_issues, live_projects=p,
                                    _listProjnames=_listProjnames,issues=issues,
-                                   _listAllotedDays=_listAllotedDays, total_projs=t,auth=session['role'])
+                                   _listAllotedDays=_listAllotedDays, total_projs=t,auth=session['role'],total_funds=total_funds)
 
         elif(session['role'] == "tl"):
             # ============================= total issues =================================

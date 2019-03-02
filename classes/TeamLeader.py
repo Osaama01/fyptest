@@ -167,7 +167,7 @@ class TeamLeader(USERS):
 
     def create_deliverable(self,project_id, details_list):
 
-        try:
+        # try:
             result_set = dbb.execute("SELECT MAX(del_id) FROM \"DELIVERABLES\"")  # Deliverable id for new project
             for r in result_set:
                 del_id = r[0] + 1
@@ -175,9 +175,9 @@ class TeamLeader(USERS):
             db.session.add(new_del)
             db.session.commit()
             return True
-        except:
-            db.session.rollback()
-            return False
+        # except:
+        #     db.session.rollback()
+        #     return False
 
     def mark_completed(self,project_id):
         try:

@@ -333,7 +333,7 @@
                 $( "#projs tr td:nth-child(8)" ).click(function() {
                     $("#projs tr td:nth-child(7)" ).data('clicked', true);
                     var p_id=$(this).closest('tr').children().closest("td").html();
-                    alert(p_id);
+                    {#alert(p_id);#}
 
                     $.ajax({
                         data:{
@@ -344,7 +344,7 @@
                         })
                         .done(function (data) {
                                 if (data.error){
-                                    alert('Please Wait ...');
+                                    {#alert('Please Wait ...');#}
                                 }
                                 else {
                                     location.reload(true);
@@ -361,10 +361,10 @@
             var prr_id;
             $(function() {
                 $( "#projs tr td:nth-child(7)" ).click(function() {
-                    alert('child');
+                    {#alert('child');#}
                     $("#projs tr td:nth-child(7)" ).data('clicked', true);
                     prr_id=$(this).closest('tr').children().closest("td").html();
-                    alert(prr_id);
+                    {#alert(prr_id);#}
                     $("#EditProjForm").modal('toggle');
 
                     $.ajax({
@@ -376,7 +376,7 @@
                         })
                             .done(function (data) {
                                 if (data.error){
-                                    alert('Please Wait ...');
+                                    {#alert('Please Wait ...');#}
                                 }
                                 else {
                                     var jsonobj=data.PeditDet;
@@ -408,7 +408,7 @@
                     })
                         .done(function (data) {
                             if (data.error) {
-                                alert('Please Wait ...');
+                                {#alert('Please Wait ...');#}
                             }
                             else {
                             }
@@ -423,7 +423,7 @@
             var prrrid;
             $(function() {
                 $( "#projs tr" ).click(function() {
-                    alert('parent');
+                    {#alert('parent');#}
                     if(($("#projs tr td:nth-child(7)" ).data('clicked')==false) || ($("#projs tr td:nth-child(8)" ).data('clicked')==false)) {
                         prrrid = $(this).children().closest("td").html();
                         {#alert(a);#}
@@ -469,7 +469,7 @@
                         })
                             .done(function (data) {
                                 if (data.error) {
-                                    alert('Please Wait ...');
+                                    {#alert('Please Wait ...');#}
                                 }
                                 else {
                                     var jsonobj = data.pdet;
@@ -509,7 +509,7 @@
                     })
                         .done(function (data) {
                             if (data.error) {
-                                alert('Please Wait ...');
+                                {#alert('Please Wait ...');#}
                             }
                             else {
                             }

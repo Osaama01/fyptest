@@ -21,7 +21,7 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href={{ url_for('formfilling2') }}>
                                 <i class="ti-plus"></i>
                                 <p>New Deliverable</p>
                             </a>
@@ -406,10 +406,10 @@
             var activityid;
             $(function() {
                 $( "#dels tr td:nth-child(5)" ).click(function() {
-                    alert('child');
+                    {#alert('child');#}
                     $(this).data('clicked', true);
                     delid=$(this).closest('tr').children().closest("td").html();
-                    alert(delid);
+                    {#alert(delid);#}
                     $("#EditDelForm").modal('toggle');
 
                     $.ajax({
@@ -422,7 +422,7 @@
                         })
                             .done(function (data) {
                                 if (data.error){
-                                    alert('Please Wait ...');
+                                    {#alert('Please Wait ...');#}
                                 }
                                 else {
                                     var jsonobj=data.DeditDet;
@@ -458,7 +458,7 @@
                     })
                         .done(function (data) {
                             if (data.error) {
-                                alert('Please Wait ...');
+                                {#alert('Please Wait ...');#}
                             }
                             else {
                             }
@@ -474,7 +474,7 @@
             $(function() {
                     $( "#dels tr td:nth-child(5)" ).data('clicked',true);
                     $("#dels tr").click(function () {
-                        alert('parent');
+                        {#alert('parent');#}
                         if(($(this).find(':nth-child(5)').data('clicked')===false)) {
                         delid = $(this).children().closest("td").html();
                         var Delname = $(this).find(':nth-child(2)').html();
@@ -495,7 +495,7 @@
                         })
                             .done(function (data) {
                                 if (data.error) {
-                                    alert('Please Wait ...');
+                                    {#alert('Please Wait ...');#}
                                 }
                                 else {
                                     var jsonobj = data.activities;
@@ -520,7 +520,7 @@
                                     $("#activitiestbl tr").click(function () {
                                         activityid = $(this).children().closest("td").html();
                                         if ($(this).find(':nth-child(5)').data('clicked') === true) {
-                                            alert("Add Comments");
+                                            {#alert("Add Comments");#}
                                             $("#add_commentform").show();
                                             $(this).find(':nth-child(5)').data('clicked', false);
                                         }
@@ -535,7 +535,7 @@
                                     $("#activitiestbl tr").click(function () {
                                         activityid = $(this).children().closest("td").html();
                                         if($(this).find(':nth-child(6)').data('clicked')===true){
-                                            alert("Edit Activity");
+                                            {#alert("Edit Activity");#}
                                             $("#editactivitydiv").show();
                                             var n=$(this).find(':nth-child(2)').html();
                                             var p=$(this).find(':nth-child(3)').html();
@@ -556,7 +556,7 @@
                                     $("#activitiestbl tr").click(function () {
                                         activityid = $(this).children().closest("td").html();
                                         if($(this).find(':nth-child(7)').data('clicked')===true) {
-                                            alert("Approve Activity");
+                                            {#alert("Approve Activity");#}
                                             $.ajax({
                                                 data: {
                                                     proid: proj,
@@ -568,7 +568,7 @@
                                             })
                                                 .done(function (data) {
                                                     if (data.error) {
-                                                        alert('Please Wait ...');
+                                                        {#alert('Please Wait ...');#}
                                                     }
                                                     else {
                                                     }
@@ -610,7 +610,7 @@
                     })
                         .done(function (data) {
                             if (data.error) {
-                                alert('Please Wait ...');
+                                {#alert('Please Wait ...');#}
                             }
                             else {
                             }
@@ -639,7 +639,7 @@
                     })
                         .done(function (data) {
                             if (data.error) {
-                                alert('Please Wait ...');
+                                {#alert('Please Wait ...');#}
                             }
                             else {
                             }

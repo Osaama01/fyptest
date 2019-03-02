@@ -124,7 +124,7 @@
                 $( "#projs tr td:nth-child(7)" ).click(function() {
                     $(this).data('clicked', true);
                     var p_id=$(this).closest('tr').children().closest("td").html();
-                    alert(p_id);
+                    {#alert(p_id);#}
 
                     $.ajax({
                         data:{
@@ -135,7 +135,7 @@
                         })
                         .done(function (data) {
                                 if (data.error){
-                                    alert('Please Wait ...');
+                                    {#alert('Please Wait ...');#}
                                 }
                                 else {
                                     location.reload(true);
@@ -151,7 +151,7 @@
         <script>
             $(function() {
                 $( "#projs tr" ).click(function() {
-                    alert('parent');
+                    {#alert('parent');#}
                     if(($("#projs tr td:nth-child(7)" ).data('clicked')===false)) {
                         var a = $(this).children().closest("td").html();
                         document.body.innerHTML += '<form id="dynForm" action="{{ url_for('leader_deliverables') }}" method="post"><input type="hidden" name="proid" value='+a+'> </form>';
