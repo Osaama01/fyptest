@@ -5,6 +5,8 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="app.db_session" />
+          <option value="flask_wkhtmltopdf" />
+          <option value="app.render_template_to_pdf" />
         </list>
       </option>
     </inspection_tool>

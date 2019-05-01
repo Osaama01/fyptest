@@ -394,7 +394,7 @@ hr {
 .sidebar .sidebar-wrapper {
     position: relative;
     overflow: auto;
-    width: 260px;
+    width: auto;
     z-index: 4;
     height: 100vh;
     box-shadow: inset -1px 0px 0px 0px #DDDDDD;
@@ -414,15 +414,15 @@ hr {
 
 .sidebar,
 .off-canvas-sidebar {
-    width: 260px;
+    width: 100px;
     display: block;
     font-weight: 200;
 }
 
 .sidebar .logo,
 .off-canvas-sidebar .logo {
-    padding: 18px 0px;
-    margin: 0 20px;
+    padding: 10px 0px;
+    margin: 0 10px;
 }
 
 .sidebar .logo p,
@@ -451,9 +451,6 @@ hr {
 
 .sidebar .nav li > a,
 .off-canvas-sidebar .nav li > a {
-    margin: 10px 0px;
-    padding-left: 25px;
-    padding-right: 25px;
     opacity: .7;
 }
 
@@ -498,7 +495,8 @@ hr {
     line-height: 30px;
     font-size: 12px;
     font-weight: 600;
-    text-transform: uppercase;
+    text-transform: lowercase;
+    text-transform: lowercase;
 }
 
 .sidebar .nav i,
@@ -629,7 +627,7 @@ hr {
     position: relative;
     z-index: 2;
     float: right;
-    width: calc(100% - 260px);
+    width: calc(100% - 100px);
     -webkit-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
     -moz-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
     -o-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
@@ -664,7 +662,7 @@ hr {
 
 @media (min-width: 991px) {
     .navbar-fixed {
-        width: calc(100% - 260px);
+        width: calc(100% - 100px);
     }
 }
 
@@ -3459,7 +3457,7 @@ svg.ct-chart-bar, svg.ct-chart-line{
     }
     .navbar .navbar-wrapper {
         left: 0;
-        width: 100%;
+        width: 50%;
         -webkit-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
         -moz-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
         -o-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
@@ -3484,7 +3482,7 @@ svg.ct-chart-bar, svg.ct-chart-line{
         top: 0;
         left: auto;
         height: 100%;
-        width: 260px;
+        width: 150px;
         right: 0;
         z-index: 1032;
         visibility: visible;
@@ -3983,7 +3981,7 @@ svg.ct-chart-bar, svg.ct-chart-line{
     .navbar-nav .open .dropdown-menu {
         position: static;
         float: none;
-        width: auto;
+        width: 100%;
         margin-top: 0;
         background-color: transparent;
         border: 0;
@@ -4023,4 +4021,15 @@ svg.ct-chart-bar, svg.ct-chart-line{
         -ms-overflow-style: -ms-autohiding-scrollbar;
         -webkit-overflow-scrolling: touch;
     }
+}
+
+#myProgress {
+  width: 100%;
+  background-color: grey;
+}
+
+#myBar {
+  width: 1%;
+  height: 30px;
+  background-color: green;
 }

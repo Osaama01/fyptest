@@ -28,6 +28,26 @@ $(document).ready(function(){
         pd.initRightMenu();
     }
 
+    $("#search").on("keyup", function() {
+        var value = $(this).val();
+        //alert("Hello There !");
+        $("#projs tr ").each(function(index) {
+            if (index !== 0) {
+
+                $row = $(this);
+
+                var id = $row.find("td:nth-child(2)").text();
+
+                if (id.indexOf(value) !== 0) {
+                    $row.hide();
+                }
+                else {
+                    $row.show();
+                }
+            }
+        });
+    });
+
     //  Activate the tooltips
     $('[rel="tooltip"]').tooltip();
 
@@ -108,6 +128,24 @@ pd = {
             $nav_content = $(nav_content);
             $nav_content.insertBefore($sidebar_nav);
 
+            $("#search").on("keyup", function() {
+                    var value = $(this).val();
+                    $("#projs tr ").each(function(index) {
+                        if (index !== 0) {
+
+                            $row = $(this);
+
+                            var id = $row.find("td:nth-child(2)").text();
+
+                            if (id.indexOf(value) !== 0) {
+                                $row.hide();
+                            }
+                            else {
+                                $row.show();
+                            }
+                        }
+                    });
+                });
             $(".sidebar-wrapper .dropdown .dropdown-menu > li > a").click(function(event) {
                 event.stopPropagation();
 

@@ -4,13 +4,12 @@
     {% endblock %}
     {% block head %}
         {{ super() }}
-
+        <link rel="stylesheet" type="text/css" href="/static/chartist-plugin-tooltip.css"/>
         <script type="text/javascript">
         var C1_pnames={{ _listProjnames|tojson }}
         var C1_Adays={{ _listAllotedDays|tojson }}
         var allocatedf={{ allocatedfunds|tojson }}
         var releasef={{ releasedfunds|tojson }}
-
         {#var C2_lables={{  }}#}
         var C2_series=[{{ live_projects }},{{ total_projs-live_projects }}]
 

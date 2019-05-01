@@ -4,7 +4,7 @@
     {% endblock %}
     {% block head %}
         {{ super() }}
-
+        <link rel="stylesheet" type="text/css" href="/static/chartist-plugin-tooltip.css" />
         <script type="text/javascript">
         var C1_pnames={{ _listProjnames|tojson }}
         var C1_Adays={{ _listAllotedDays|tojson }}
@@ -13,7 +13,8 @@
         var releasef={{ releasedfunds|tojson }}
 
         {#var C2_lables={{  }}#}
-        var C2_series=[{{ live_projects }},{{ total_projs-live_projects }}]
+        var
+            C2_series=[{{ live_projects }},{{ total_projs-live_projects }}]
 
         {#var C3_lables={{  }}#}
         {#var C3_series={{  }}#}
@@ -26,7 +27,7 @@
     {% block body %}
         {% block navbarlinks %}
         {% endblock %}
-         <div class="content">
+         <div class="content" id="mainDiv">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-4 col-sm-6">
@@ -160,6 +161,13 @@
                 </div>
             </div>
         </div>
+{# ------------------------------------------------------------ Loader On Rediect ----------------------------------------------------------------------- #}
+
+        <div id="loading" style="display: none;text-align: center;z-index: 9999999999999999999999999999;">
+            <img src="../static/Login/images/img-01.png" id="Img5" data-transition="slide" />
+        </div>
+
+{# ------------------------------------------------------------ Loader On Rediect ----------------------------------------------------------------------- #}
 
         <script src="{{ url_for('static', filename='samplechart.js') }}"></script>
 
@@ -295,5 +303,29 @@
                 });
             });
         </script>
+
+        <script type="text/javascript">
+            {#function pageLoad(sender, args) {#}
+            {#    var prm = Sys.WebForms.PageRequestManager.getInstance();#}
+            {#    prm.add_beginRequest(BeginRequestHandler);#}
+            {#    prm.add_endRequest(EndRequestHandler);#}
+            {##}
+            {##}
+            {#function BeginRequestHandler(sender, args) {#}
+            {#    document.getElementById("mainDiv").style.visibility = 'hidden';#}
+            {#    document.getElementById("loading").style.visibility = 'visible';#}
+            {##}
+            {##}
+            {#function EndRequestHandler(sender, args) {#}
+            {#   document.getElementById("mainDiv").style.visibility = 'visible';#}
+            {#   document.getElementById("loading").style.visibility = 'hidden';#}
+            {##}
+        $(window).unload(function()
+        {
+            alert("Hello");
+         $('#mainDiv').style.display='none';
+         $('#loading').style.display='block';
+        });
+         </script>
 
     {% endblock %}

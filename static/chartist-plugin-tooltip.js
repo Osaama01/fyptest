@@ -30,8 +30,12 @@
       } else if (chart.constructor.name ==  Chartist.Pie.prototype.constructor.name) {
         // Added support for donut graph
         if (chart.options.donut) {
-          tooltipSelector = 'ct-slice-donut';
-        } else {
+            if(chart.options.donutSolid) {
+              tooltipSelector = 'ct-slice-donut-solid';
+            } else {
+              tooltipSelector = 'ct-slice-donut';
+            }
+        }else {
           tooltipSelector = 'ct-slice-pie';
         }
       }
@@ -59,7 +63,7 @@
         });
       }
 
-      on('mouseover', tooltipSelector, function (event) {
+      on('mouseover', null, function (event) {
         var $point = event.target;
         var tooltipText = '';
 
@@ -121,7 +125,7 @@
         }
       });
 
-      on('mouseout', tooltipSelector, function () {
+      on('mouseout', null, function () {
         hide($toolTip);
       });
 
