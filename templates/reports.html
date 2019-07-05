@@ -13,6 +13,21 @@
         </div>
 
         {# ------------------------------------------------------------ Loader On Rediect ----------------------------------------------------------------------- #}
+        {% if colcount|length <= 0 %}
+            <div class="content" id="mainDiv">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h1 class="title" style="text-align: center">No records Found !</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
 
         <div class="content" id="mainDiv">
                     <div class="container-fluid">
@@ -20,6 +35,7 @@
                             <div class="col-md-12">
                                 <div class="card">
                                     <div class="header">
+                                        <h4 class="title" style="text-align: center">{{ startDate }} {{ endDate }}</h4>
                                         <h4 class="title" style="text-align: center">Portfolio Targets - MPS</h4>
                                         <p class="category" style="text-align: center">Oct 2018 - 2020</p>
                                     </div>
@@ -37,7 +53,7 @@
                                                         <th colspan="{{ monthsColSpan[colSpan] }}">{{ yearHeaders[colSpan] }}</th>
                                                     {% endfor %}
 
-                                                    <th>Total</th>
+{#                                                    <th>Total</th>#}
 {#                                                    <th>Remarks</th>#}
 
                                                 </tr>
@@ -66,7 +82,7 @@
                                                         <th>{{ value }}</th>
                                                     {% endfor %}
 
-                                                    <th>&nbsp;</th>
+{#                                                    <th>&nbsp;</th>#}
 {#                                                    <th>&nbsp;</th>#}
                                                 </tr>
 
@@ -84,19 +100,19 @@
                                                             <td>&nbsp;</td>
                                                             <td>&nbsp;</td>
 
-                                                            {% for ic in range(colcount[innerCounter]) %}               {#Empty Cols after#}
+                                                            {% for ic in range((colcount[innerCounter])) %}               {#Empty Cols after#}
                                                                 <td>&nbsp;</td>
                                                             {% endfor %}
 
                                                             <td>{{ qty[counter][innerCounter] }}</td>                   {# QTY #}
 
                                                             {% if colcount[innerCounter] < colcount|sort|last %}
-                                                                {% for i in range(colcount|sort|last -colcount[innerCounter]) %}
+                                                                {% for i in range((colcount|sort|last) - (colcount[innerCounter])) %}
                                                                     <td>&nbsp;</td>                                     {# Empty Cols before #}
                                                                 {% endfor %}
                                                             {% endif %}
 
-                                                            <td>{{ qty[counter][innerCounter] }}</td>                                             {# Total #}
+{#                                                            <td>{{ qty[counter][innerCounter] }}</td>                                             {# Total #}
 {#                                                            <td>&nbsp;</td>                                             Remarks #}
                                                         </tr>
                                                 {% endfor %}
@@ -125,5 +141,5 @@
             $('#loading').style.display='block';
         });
          </script>
-
+        {% endif %}
     {% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'masterpage.html' %}
+    {% block head %}
+        {{ super() }}
+
+        <script src="{{ url_for('static', filename='samplechart.js') }}" xmlns=""></script>
+        <script src="{{ url_for('static', filename='chartist-plugin-axistitle.js') }}"></script>
+
+    {% endblock %}
+
+    {% block body %}
+
+    {% endblock %}

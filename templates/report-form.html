@@ -1,0 +1,104 @@
+    {% extends 'masterpage.html' %}
+    {% block title %}
+    {% endblock %}
+    {% block head %}
+        {{ super() }}
+        	<meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+            <!--===============================================================================================-->
+                <link rel="icon" type="image/png" href="../static/project-form/images/icons/favicon.ico"/>
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/vendor/bootstrap/css/bootstrap.min.css">
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/fonts/iconic/css/material-design-iconic-font.min.css">
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/vendor/animate/animate.css">
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/vendor/css-hamburgers/hamburgers.min.css">
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/vendor/animsition/css/animsition.min.css">
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/vendor/select2/select2.min.css">
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/vendor/daterangepicker/daterangepicker.css">
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/vendor/noui/nouislider.min.css">
+            <!--===============================================================================================-->
+                <link rel="stylesheet" type="text/css" href="../static/project-form/css/util.css">
+                <link rel="stylesheet" type="text/css" href="../static/project-form/css/main.css">
+            <!--===============================================================================================-->
+    {% endblock %}
+
+    {% block body %}
+            <div class="container-contact100">
+                <div class="wrap-contact100">
+                <h6 align="center">{{ error }}</h6>
+                    <form class="contact100-form validate-form" method="post">
+                        <span class="contact100-form-title">
+                            Report Generation
+                        </span>
+
+                        <div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Please Select Project Name">
+                            <span class="label-input100">Report Type</span>
+                                <div>
+                                    <select class="js-select2" name="report_type">
+                                        <option>MPS</option>
+                                        <option>Portfolio Issues</option>
+                                    </select>
+                                    <div class="dropDownSelect2"></div>
+                                </div>
+                        </div>
+
+                        <div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Choose Start Date">
+                            <span class="label-input100">Start Date</span>
+                            <input type="date" class="input100" name="startDate" placeholder="Choose Start date"></input>
+                        </div>
+
+                        <div class="wrap-input100 validate-input bg0 rs1-alert-validate" data-validate = "Please Choose End Date">
+                            <span class="label-input100">End Date</span>
+                            <input type="date" class="input100" name="endDate" placeholder="Choose End date"></input>
+                        </div>
+
+                        <div class="container-contact100-form-btn">
+                            <button class="contact100-form-btn" value="submit" name="submit" type="submit">
+                                <span>
+                                    Generate
+                                    <i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+
+
+        <!--===============================================================================================-->
+            <script src="../static/project-form/vendor/jquery/jquery-3.2.1.min.js"></script>
+        <!--===============================================================================================-->
+            <script src="../static/project-form/vendor/animsition/js/animsition.min.js"></script>
+        <!--===============================================================================================-->
+            <script src="../static/project-form/vendor/bootstrap/js/popper.js"></script>
+            <script src="../static/project-form/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <!--===============================================================================================-->
+            <script src="../static/project-form/vendor/select2/select2.min.js"></script>
+        <!--===============================================================================================-->
+            <script src="../static/project-form/js/main.js"></script>
+
+
+        <script src="vendor/select2/select2.min.js"></script>
+            <script>
+                $(".js-select2").each(function(){
+                    $(this).select2({
+                        minimumResultsForSearch: 20,
+                        dropdownParent: $(this).next('.dropDownSelect2')
+                    });
+                })
+            </script>
+
+        </body>
+
+    {% endblock %}

@@ -1,0 +1,264 @@
+{% extends 'masterpage.html' %}
+    {% block head %}
+        {{ super() }}
+        <script src="{{ url_for('static', filename='samplechart.js') }}" xmlns=""></script>
+        <script src="{{ url_for('static', filename='chartist-plugin-axistitle.js') }}"></script>
+        <script type="text/javascript">
+        var cus_pred={{ cus_pred|tojson }}
+        </script>
+
+        <script src="{{ url_for('static', filename='heatmap.js') }}"></script>
+        <script src="{{ url_for('static', filename='gmaps-heatmap.js') }}"></script>
+
+        <script type="text/javascript">
+        // don't forget to add gmaps-heatmap.js
+        var myLatlng = new google.maps.LatLng(25.6586, -80.3568);
+        // map options,
+        var myOptions = {
+          zoom: 3,
+          center: myLatlng
+        };
+        // standard map
+        map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+        // heatmap layer
+        heatmap = new HeatmapOverlay(map,
+          {
+            // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+            "radius": 2,
+            "maxOpacity": 1,
+            // scales the radius based on map zoom
+            "scaleRadius": true,
+            // if set to false the heatmap uses the global maximum for colorization
+            // if activated: uses the data maximum within the current map boundaries
+            //   (there will always be a red spot with useLocalExtremas true)
+            "useLocalExtrema": true,
+            // which field name in your data represents the latitude - default "lat"
+            latField: 'lat',
+            // which field name in your data represents the longitude - default "lng"
+            lngField: 'lng',
+            // which field name in your data represents the data value - default "value"
+            valueField: 'count'
+          }
+        );
+
+        var testData = {
+          max: 8,
+          data: [{lat: 24.6408, lng:46.7728, count: 3},{lat: 50.75, lng:-1.55, count: 1}, ...]
+        };
+
+        heatmap.setData(testData);
+        </script>
+
+        <style>
+           /* Set the size of the div element that contains the map */
+          #map {
+            height: 500px;  /* The height is 400 pixels */
+            width: 100%;  /* The width is the width of the web page */
+           }
+        </style>
+
+    {% endblock %}
+    {% block body %}
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Customer Volume Prediction</h4>
+                                <p class="category">Orders Prediction By Region</p>
+                            </div>
+                            <div class="content table-responsive table-full-width">
+                                <table id="projs" class="table table-striped">
+                                    <thead>
+                                        <th>Balochistan</th>
+                                        <th>Sindh</th>
+                                        <th>AJK</th>
+                                        <th>FATA</th>
+                                        <th>Islamabad</th>
+                                        <th>KPK</th>
+                                        <th>Punjab</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                        {% for result in cus_pred %}
+                                                <td >{{ result }}</td>
+                                        {% endfor %}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                              <div class="card">
+                                    <div id="map"></div>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <script>
+                  // Initialize and add the map
+                  function initMap() {
+                      // The location of Uluru
+                      var Pakistan = {lat: 30.3753, lng: 69.3451};
+                      var Balochistan = {lat: 30.183270, lng: 66.996452};
+                      var GilgitBaltistan = {lat: 35.920834, lng: 74.308334};
+                      var Islamabad = {lat: 33.6844, lng: 73.0479};
+                      var Sindh = {lat: 24.8607, lng: 67.0011};
+                      var Punjab = {lat: 30.1575, lng: 71.5249};
+                      var AJK = {lat: 33.148392, lng: 73.751770};
+                      var KPK = {lat: 34.0151, lng: 71.5249};
+
+                      // The map, centered at Uluru
+                      var map = new google.maps.Map(
+                          document.getElementById('map'), {zoom: 5.5, center: Pakistan});
+                      // The marker, positioned at Pakistan
+                        var marker1 = new google.maps.Marker({title:'Balochistan', animation: google.maps.Animation.DROP, position: Balochistan, map: map});
+                        var marker2 = new google.maps.Marker({title:'Sindh', animation: google.maps.Animation.DROP, position: Sindh, map: map});
+                        var marker3 = new google.maps.Marker({title:'AJK', animation: google.maps.Animation.DROP, position: AJK, map: map});
+                        var marker4 = new google.maps.Marker({title:'GilgitBaltistan', animation: google.maps.Animation.DROP, position: GilgitBaltistan, map: map});
+                        var marker5 = new google.maps.Marker({title:'Islamabad', animation: google.maps.Animation.DROP, position: Islamabad, map: map});
+                        var marker6 = new google.maps.Marker({title:'KPK', animation: google.maps.Animation.DROP, position: KPK, map: map});
+                        var marker7 = new google.maps.Marker({title:'Punjab', animation: google.maps.Animation.DROP, position: Punjab, map: map});
+                        var marker_tooltip=" -> Predicted Customer Volume: ";
+
+                        var provinceName="";
+                        var Details="";
+                        var contentString;
+
+                        var infowindow = new google.maps.InfoWindow({
+                          content: contentString,
+                          maxWidth: 200
+                        });
+
+                        marker1.addListener('mouseover', function() {
+                          provinceName= "Balochistan";
+                          Details= {{ cus_pred[0] }};
+                            infowindow.setContent('<div id="content">'+
+                            '<b id="firstHeading" class="firstHeading">'+provinceName+'</b>'+
+                            '<div id="bodyContent">'+
+                            '<p>Predicted Customer Volume: '+Details+'</p>'+
+                            '</div>'+
+                            '</div>');
+                          infowindow.open(map, marker1);
+                        });
+
+                        marker1.addListener('mouseout', function() {
+                            infowindow.close();
+                        });
+
+
+                        marker2.addListener('mouseover', function() {
+                          provinceName= "Sindh";
+                          Details= {{ cus_pred[1] }};
+                          infowindow.setContent('<div id="content">'+
+                            '<b id="firstHeading" class="firstHeading">'+provinceName+'</b>'+
+                            '<div id="bodyContent">'+
+                            '<p>Predicted Customer Volume: '+Details+'</p>'+
+                            '</div>'+
+                            '</div>');
+                          infowindow.open(map, marker2);
+                        });
+
+                        marker2.addListener('mouseout', function() {
+                            infowindow.close();
+                        });
+
+                        marker3.addListener('mouseover', function() {
+                            provinceName= "AJK";
+                            Details= {{ cus_pred[2] }};
+                          infowindow.setContent('<div id="content">'+
+                            '<b id="firstHeading" class="firstHeading">'+provinceName+'</b>'+
+                            '<div id="bodyContent">'+
+                            '<p>Predicted Customer Volume: '+Details+'</p>'+
+                            '</div>'+
+                            '</div>');
+                            infowindow.open(map, marker3);
+                        });
+
+                        marker3.addListener('mouseout', function() {
+                            infowindow.close();
+                        });
+
+                        marker4.addListener('mouseover', function() {
+                            provinceName= "Gilgit-Baltistan";
+                            Details= {{ cus_pred[3] }};
+                          infowindow.setContent('<div id="content">'+
+                            '<b id="firstHeading" class="firstHeading">'+provinceName+'</b>'+
+                            '<div id="bodyContent">'+
+                            '<p>Predicted Customer Volume: '+Details+'</p>'+
+                            '</div>'+
+                            '</div>');
+                            infowindow.open(map, marker4);
+                        });
+
+                        marker4.addListener('mouseout', function() {
+                            infowindow.close();
+                        });
+
+                        marker5.addListener('mouseover', function() {
+                            provinceName= "Islamabad";
+                            Details= {{ cus_pred[4] }};
+                          infowindow.setContent('<div id="content">'+
+                            '<b id="firstHeading" class="firstHeading">'+provinceName+'</b>'+
+                            '<div id="bodyContent">'+
+                            '<p>Predicted Customer Volume: '+Details+'</p>'+
+                            '</div>'+
+                            '</div>');
+
+                            infowindow.open(map, marker5);
+                        });
+
+                        marker5.addListener('mouseout', function() {
+                            infowindow.close();
+                        });
+
+                        marker6.addListener('mouseover', function() {
+                            provinceName= "KPK";
+                            Details= {{ cus_pred[5] }};
+                          infowindow.setContent('<div id="content">'+
+                            '<b id="firstHeading" class="firstHeading">'+provinceName+'</b>'+
+                            '<div id="bodyContent">'+
+                            '<p>Predicted Customer Volume: '+Details+'</p>'+
+                            '</div>'+
+                            '</div>');
+
+                            infowindow.open(map, marker6);
+                        });
+
+                        marker6.addListener('mouseout', function() {
+                            infowindow.close();
+                        });
+
+                        marker7.addListener('mouseover', function() {
+                            provinceName= "Punjab";
+                            Details= {{ cus_pred[6] }};
+                          infowindow.setContent('<div id="content">'+
+                            '<b id="firstHeading" class="firstHeading">'+provinceName+'</b>'+
+                            '<div id="bodyContent">'+
+                            '<p>Predicted Customer Volume: '+Details+'</p>'+
+                            '</div>'+
+                            '</div>');
+
+                            infowindow.open(map, marker7);
+                        });
+
+                        marker7.addListener('mouseout', function() {
+                            infowindow.close();
+                        });
+
+                        marker1.label+=marker_tooltip+{{ cus_pred[0] }};
+                        marker2.label+=marker_tooltip+{{ cus_pred[1] }};
+                        marker3.label+=marker_tooltip+{{ cus_pred[2] }};
+                        marker4.label+=marker_tooltip+{{ cus_pred[3] }};
+                        marker5.label+=marker_tooltip+{{ cus_pred[4] }};
+                        marker6.label+=marker_tooltip+{{ cus_pred[5] }};
+                        marker7.label+=marker_tooltip+{{ cus_pred[6] }};
+                  }
+            </script>
+            <script async defer
+                  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeJvrKctJcJyKJKLEqIiPCFC99iTyfIFI&callback=initMap">
+            </script>
+    {% endblock %}

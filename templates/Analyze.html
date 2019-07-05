@@ -1,0 +1,85 @@
+    {% extends 'masterpage.html' %}
+    {% block head %}
+        {{ super() }}
+        <script src="{{ url_for('static', filename='samplechart.js') }}" xmlns=""></script>
+        <script src="{{ url_for('static', filename='chartist-plugin-axistitle.js') }}"></script>
+
+        <script type="text/javascript">
+        var submittedProjDet={{ proj_details|tojson }}
+        var projectcompletionchances={{ prediction }}
+        </script>
+
+    {% endblock %}
+    {% block body %}
+        <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">Project Analysis</h4>
+                                        <p class="category">Project Details</p>
+                                    </div>
+                                    <div class="content table-responsive table-full-width">
+                                        <table id="projs" class="table table-striped">
+                                            <thead>
+                                                <th>PROJECT NAME</th>
+                                                <th>PROJECT DESCRIPTION</th>
+                                                <th>PROJECT TYPE</th>
+                                                <th>DAYS</th>
+                                                <th>PRIORITY</th>
+                                                <th>TEAM</th>
+                                                <th>PROJECT MANAGER</th>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                {% for details in proj_details %}
+                                                    <td>{{ details }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="header">
+                                        <h4 class="title">Project Completion Chances</h4>
+                                        <p class="category">{{ prediction }}</p>
+                                    </div>
+                                    <br>
+                                    {% if  prediction <=8 %}
+                                        <div class="progress">
+                                          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="83"
+                                          aria-valuemin="0" aria-valuemax="100" style="width:83%">
+                                            High Chances of Success (75% above)
+                                          </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if  prediction > 8 and prediction <= 10 %}
+                                        <div class="progress">
+                                          <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="63"
+                                          aria-valuemin="0" aria-valuemax="100" style="width:63%">
+                                            Good Chances of Success (50% above)
+                                          </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if  prediction > 10 and prediction <= 13 %}
+                                        <div class="progress">
+                                          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="36"
+                                          aria-valuemin="0" aria-valuemax="100" style="width:36%">
+                                            Moderate Chances of Success (25% above)
+                                          </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if  prediction > 13 %}
+                                        <div class="progress">
+                                          <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="20"
+                                          aria-valuemin="0" aria-valuemax="100" style="width:20%">
+                                            Low Chances of Success (below 25%)
+                                          </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+    {% endblock %}

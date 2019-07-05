@@ -1,0 +1,62 @@
+{#    {% extends 'masterpage.html' %}#}
+    {% block title %}
+    {% endblock %}
+    {% block head %}
+{#        {{ super() }}#}
+    {% endblock %}
+
+    {% block body %}
+        {# ------------------------------------------------------------ Loader On Rediect ----------------------------------------------------------------------- #}
+
+        <div id="loading" style="display: none;text-align: center;z-index: 9999999999999999999999999999;">
+            <img src="../static/Login/images/img-01.png" id="Img5" data-transition="slide" />
+        </div>
+
+        {# ------------------------------------------------------------ Loader On Rediect ----------------------------------------------------------------------- #}
+
+        <div class="content" id="mainDiv">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title" style="text-align: center">{{ startDate }} {{ endDate }}</h4>
+                                        <h4 class="title" style="text-align: center">Portfolio Issues</h4>
+                                        <p class="category" style="text-align: center">Issues by Project Types</p>
+                                    </div>
+                                    <div class="content table-responsive table-full-width">
+                                        <table id="issuestbl" class="table table-striped table-bordered">
+                                            <tr>
+                                                <th rowspan="2">Portfolios</th>
+                                                <th colspan="14" style="text-align: center">Types</th>
+                                                <th rowspan="2">Total</th>
+                                            </tr>
+                                            <tr>
+                                                {% for i in pTypes %}
+                                                    <td>{{ i }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                            {% for pf in range(distinct_pf|length) %}
+                                                <tr>
+                                                <td><b>{{ distinct_pf[pf] }}</b></td>
+                                                </tr>
+                                                <td>&nbsp;</td>
+                                                {% for pff in issuesTypes %}
+                                                    {% if pff.get("pfid")==distinct_pf[pf] %}
+                                                        {% for type in pTypes%}
+                                                            {% if pff.get("ptype")==type %}
+                                                                <td>{{ pff.get("issues") }}</td>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <td>{{ pf_issues[pf] }}</td>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+    {% endblock %}
